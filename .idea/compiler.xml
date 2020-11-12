@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="14">
+      <module name="kds-mpp.commonMain" target="1.8" />
+      <module name="kds-mpp.commonTest" target="1.8" />
+      <module name="kds-mpp.jvmMain" target="1.8" />
+      <module name="kds-mpp.jvmTest" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

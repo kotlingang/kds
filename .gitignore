@@ -1,0 +1,7 @@
+/.gradle/
+/build/
+/data/
+/buildSrc/build/
+/buildSrc/.gradle/
+/local.properties
+/jsCommon/build/
