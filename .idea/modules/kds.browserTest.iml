@@ -6,8 +6,8 @@
         <dependsOnModuleNames>kds:commonTest</dependsOnModuleNames>
         <sourceSets>
           <sourceSet>kds.browserMain</sourceSet>
-          <sourceSet>kds.commonTest</sourceSet>
           <sourceSet>kds.commonMain</sourceSet>
+          <sourceSet>kds.commonTest</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <externalSystemTestTasks>

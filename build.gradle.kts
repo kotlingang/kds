@@ -1,5 +1,6 @@
 @file:Suppress("UNUSED_VARIABLE")
 
+import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
 
@@ -22,10 +23,13 @@ kotlin {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
+    val jsType = Attribute.of("jsType", String::class.java)
     js("browser", IR) {
+        attributes.attribute(jsType, "browser")
         browser()
     }
     js("node", IR) {
+        attributes.attribute(jsType, "node")
         useCommonJs()
         nodejs()
     }
@@ -95,7 +99,7 @@ val projectName = project.name
 allprojects {
     apply(plugin = "maven-publish")
     publishing {
-        val vcs = "https://github.com/kotlingang/sketchcode-api-lib"
+        val vcs = "https://github.com/kotlingang/ktd"
 
         publications.filterIsInstance<MavenPublication>().forEach { publication ->
             publication.pom {
