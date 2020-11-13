@@ -44,7 +44,7 @@ suspend fun main() {
 }
 ```
 
-More about load/save awaiting: [#1](https://github.com/y9san9/kds/issues/1)
+#### More about load/save awaiting: [#1](https://github.com/y9san9/kds/issues/1)
 
 ## Installaton
 `$version` - library version, can be found in bintray badge
