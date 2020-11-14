@@ -1,6 +1,5 @@
 package com.kotlingang.kds
 
-import com.kotlingang.kds.utils.runBlocking
 import kotlinx.coroutines.GlobalScope
 import kotlin.test.Test
 
@@ -8,10 +7,6 @@ import kotlin.test.Test
 object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ path("...") })
     var launchesCount by property(0)
     var list by property(listOf<String>())
-}
-
-object Storage2 : KDataStorage("storage2") {
-    var launchesCount by property(0)
 }
 
 
@@ -34,7 +29,7 @@ class StorageTests {
     }
     @Test
     fun storageTestWithoutLoadAwaiting() = GlobalScope.runBlocking {
-        with(Storage2) {
+        with(Storage) {
             println("Launches: ${++launchesCount}")
             awaitSaving()
         }

@@ -4,9 +4,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.promise
 
 
-actual fun CoroutineScope.runBlocking(block: suspend CoroutineScope.() -> Unit) {
+actual fun <T> CoroutineScope.runBlocking(block: suspend CoroutineScope.() -> T): T {
     val promise = promise {
         block()
     }
-    eval("(promise) => (async () => await promise)()")(promise)
+    return eval("(promise) => (async () => await promise)()")(promise) as T
 }

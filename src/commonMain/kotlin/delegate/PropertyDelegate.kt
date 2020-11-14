@@ -3,7 +3,6 @@ package com.kotlingang.kds.delegate
 import com.kotlingang.kds.KDataStorage
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNull
 import kotlin.reflect.KProperty
 
 
@@ -17,6 +16,6 @@ class PropertyDelegate<T> internal constructor(private val serializer: KSerializ
         val element = Json.encodeToJsonElement(serializer, value)
         storage.data[property.name] = element
 
-        storage.saveStorageAsync()
+        storage.launchCommit()
     }
 }

@@ -1,3 +1,5 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package com.kotlingang.kds
 
 import com.kotlingang.kds.builder.StorageConfig
@@ -5,8 +7,9 @@ import com.kotlingang.kds.delegate.PropertyDelegate
 import com.kotlingang.kds.storage.BaseStorage
 import com.kotlingang.kds.storage.dirPath
 import com.kotlingang.kds.storage.joinPath
-import com.kotlingang.kds.utils.runBlocking
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -19,6 +22,9 @@ import kotlin.reflect.KClass
 
 typealias StorageConfigBuilder = StorageConfig.() -> Unit
 
+/**
+ * If you are using mutable objects, do not forget to use [KDataStorage.apply] (async) or [KDataStorage.commit] (sync) to save current state (if you are using immutable objects)
+ */
 open class KDataStorage(
         builder: StorageConfigBuilder = {}
 ) : CoroutineScope {
@@ -37,21 +43,24 @@ open class KDataStorage(
     private val baseStorage = BaseStorage(path)
 
     private var dataSource: MutableMap<String, JsonElement>? = null
-    internal val data get() = runBlocking {
-        awaitLoading()
-    }.let {
+    internal val data get() = runBlocking { awaitLoading() }.let {
         dataSource ?: error("Internal error, because storage is not loaded. " +
             "You shouldn't see this error, please create an issue. To fix it try awaitLoading before using storage")
     }
 
+    private val mutex = Mutex()
     private var savingDeferred: Deferred<Unit>? = null
     /**
-     * Prevents redundant operations when it called one by one
+     * Prevents redundant operations when it called one by one.
+     * [runBlocking] used there because there is no heavy operations, just thread-safety
      */
-    internal fun saveStorageAsync() {
-        savingDeferred?.cancel()
-        savingDeferred = async {
-            baseStorage.saveStorage(Json.encodeToString(data))
+    private fun privateCommitAsync(): Deferred<Unit> = runBlocking {
+        mutex.withLock {
+            savingDeferred?.cancel()
+            savingDeferred = async {
+                baseStorage.saveStorage(Json.encodeToString(data))
+            }
+            savingDeferred ?: error("Unreachable error")
         }
     }
 
@@ -59,12 +68,6 @@ open class KDataStorage(
 
     /* ----- */
 
-    /**
-     * NOTE THAT YOU SHOULD USE IMMUTABLE OBJECTS ONLY!
-     * KDataStorage CANNOT OBSERVE MUTABLE OBJECTS' CHANGES!
-     *
-     * Checkout README for example with mutable objects
-     */
     fun <T> property(serializer: KSerializer<T>, default: T) = PropertyDelegate(serializer, default)
     inline fun <reified T> property(default: T) = property(json.serializersModule.serializer(), default)
 
@@ -72,14 +75,24 @@ open class KDataStorage(
         dataSource = Json.decodeFromString(baseStorage.loadStorage() ?: "{}")
     }
     /**
-     * Await first loading; Must be done before storage usage
+     * Await first loading; Should be done before storage usage
      */
     suspend fun awaitLoading() = loadingDeferred.await()
 
     /**
+     *  Call it if mutable data was changed to commit data async
+     */
+    fun launchCommit() = launch { privateCommitAsync().await() }
+
+    /**
+     * Call it if mutable data was changed to commit data sync
+     */
+    suspend fun commit() = launchCommit().join()
+
+    /**
      * Should be done at the end of storage usage (e.g. in console apps before it closes; useless in android)
      */
-    suspend fun awaitSaving() = savingDeferred?.join()
+    suspend fun awaitSaving() = savingDeferred?.join().unit
 }
 
 
