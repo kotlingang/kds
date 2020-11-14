@@ -1,7 +1,8 @@
 package com.kotlingang.kds
 
-import com.kotlingang.kds.utils.runTestBlocking
+import com.kotlingang.kds.utils.runBlocking
 import com.kotlingang.kds.wrapper.KValueStorage
+import kotlinx.coroutines.GlobalScope
 import kotlin.test.Test
 
 
@@ -10,7 +11,7 @@ var launchNumber by valueStorage
 
 class ValueStorageTests {
     @Test
-    fun simpleValueStorageTest() = runTestBlocking {
+    fun simpleValueStorageTest() = GlobalScope.runBlocking {
         valueStorage.awaitLoading()
         println(++launchNumber)
         valueStorage.awaitSaving()

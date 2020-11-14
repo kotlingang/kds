@@ -1,3 +1,3 @@
 rootProject.name = "kds"
 
-include("jsCommon")
+include("utils")

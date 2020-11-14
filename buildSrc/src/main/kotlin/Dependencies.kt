@@ -7,4 +7,4 @@ const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
 const val nodejsExternals = "org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7"
 
 
-val KotlinDependencyHandler.jsCommon get() = project(":jsCommon")
+val KotlinDependencyHandler.utils get() = project(":utils")

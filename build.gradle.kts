@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.kotlingang.kds"
-version = "1.0"
+version = "1.1"
 
 repositories {
     jcenter()
@@ -40,6 +40,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(utils)
                 implementation(coroutines)
                 api(serialization)
             }
@@ -62,7 +63,6 @@ kotlin {
         }
         val browserMain by getting {
             dependencies {
-                implementation(jsCommon)
             }
         }
         val browserTest by getting {
@@ -72,7 +72,6 @@ kotlin {
         }
         val nodeMain by getting {
             dependencies {
-                implementation(jsCommon)
                 implementation(nodejsExternals)
             }
         }
@@ -88,56 +87,64 @@ kotlin {
     }
 }
 
-
-val properties = loadProperties(project.rootProject.file("local.properties").absolutePath)
-
-val bintrayUser: String? by properties
-val bintrayApiKey: String? by properties
-
-val projectName = project.name
-
+val root = project
 allprojects {
-    apply(plugin = "maven-publish")
-    publishing {
-        val vcs = "https://github.com/kotlingang/ktd"
+    group = root.group
+    version = root.version
+}
 
-        publications.filterIsInstance<MavenPublication>().forEach { publication ->
-            publication.pom {
-                name.set(project.name)
-                description.set(project.description)
-                url.set(vcs)
+val localPropsFile: File = project.rootProject.file("local.properties")
+if(localPropsFile.exists()) {
+    val properties = loadProperties(localPropsFile.absolutePath)
 
-                licenses {
-                    license {
-                        name.set("The Apache Software License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        distribution.set("repo")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("y9san9")
-                        name.set("Alex Sokol")
-                        organization.set("Kotlingang")
-//                        organizationUrl.set("https://sketchcode.fun")
-                    }
+    val projectName = project.name
 
-                }
-                scm {
+    allprojects {
+        apply(plugin = "maven-publish")
+        publishing {
+            val vcs = "https://github.com/kotlingang/ktd"
+
+            publications.filterIsInstance<MavenPublication>().forEach { publication ->
+                publication.pom {
+                    name.set(project.name)
+                    description.set(project.description)
                     url.set(vcs)
-                    tag.set(project.version.toString())
+
+                    licenses {
+                        license {
+                            name.set("The Apache Software License, Version 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                            distribution.set("repo")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("y9san9")
+                            name.set("Alex Sokol")
+                            organization.set("Kotlingang")
+//                        organizationUrl.set("https://sketchcode.fun")
+                        }
+
+                    }
+                    scm {
+                        url.set(vcs)
+                        tag.set(project.version.toString())
+                    }
                 }
             }
-        }
 
-        if (bintrayUser != null && bintrayApiKey != null) {
-            repositories {
-                maven {
-                    name = "bintray"
-                    url = uri("https://api.bintray.com/maven/y9san9/kotlingang/$projectName/;publish=1;override=1")
-                    credentials {
-                        username = bintrayUser
-                        password = bintrayApiKey
+            val bintrayUser: String? by properties
+            val bintrayApiKey: String? by properties
+
+            if (bintrayUser != null && bintrayApiKey != null) {
+                repositories {
+                    maven {
+                        name = "bintray"
+                        url = uri("https://api.bintray.com/maven/y9san9/kotlingang/$projectName/;publish=1;override=1")
+                        credentials {
+                            username = bintrayUser
+                            password = bintrayApiKey
+                        }
                     }
                 }
             }

@@ -5,3 +5,4 @@
 /buildSrc/.gradle/
 /local.properties
 /jsCommon/build/
+/utils/build/

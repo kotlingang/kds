@@ -5,6 +5,7 @@ import com.kotlingang.kds.delegate.PropertyDelegate
 import com.kotlingang.kds.storage.BaseStorage
 import com.kotlingang.kds.storage.dirPath
 import com.kotlingang.kds.storage.joinPath
+import com.kotlingang.kds.utils.runBlocking
 import kotlinx.coroutines.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.decodeFromString
@@ -36,7 +37,12 @@ open class KDataStorage(
     private val baseStorage = BaseStorage(path)
 
     private var dataSource: MutableMap<String, JsonElement>? = null
-    internal val data get() = dataSource ?: error("The storage is not loaded yet. Call storage.awaitLoading() first")
+    internal val data get() = runBlocking {
+        awaitLoading()
+    }.let {
+        dataSource ?: error("Internal error, because storage is not loaded. " +
+            "You shouldn't see this error, please create an issue. To fix it try awaitLoading before using storage")
+    }
 
     private var savingDeferred: Deferred<Unit>? = null
     /**
