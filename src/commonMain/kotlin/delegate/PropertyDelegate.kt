@@ -7,15 +7,24 @@ import kotlin.reflect.KProperty
 
 
 class PropertyDelegate<T> internal constructor(private val serializer: KSerializer<T>, private val default: T) {
+    @Suppress("UNCHECKED_CAST")
     operator fun getValue(storage: KDataStorage, property: KProperty<*>): T {
-        val element = storage.data[property.name] ?: return default
-        return Json.decodeFromJsonElement(serializer, element)
+        val reference = storage.getReference(property.name)
+
+        // If there is reference then value was already gotten with this method
+        // and we should return local copy for case if value is mutable and it was changed
+        return if(reference == null) {
+            val element = storage.data[property.name]
+            val value = element?.let { Json.decodeFromJsonElement(serializer, element) } ?: default
+            storage.saveReference(property.name, value, serializer)
+            value
+        } else {
+            reference as T
+        }
     }
 
     operator fun setValue(storage: KDataStorage, property: KProperty<*>, value: T) {
-        val element = Json.encodeToJsonElement(serializer, value)
-        storage.data[property.name] = element
-
+        storage.saveReference(property.name, value, serializer)
         storage.launchCommit()
     }
 }

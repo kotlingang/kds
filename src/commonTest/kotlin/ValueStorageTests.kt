@@ -14,6 +14,6 @@ class ValueStorageTests {
     fun simpleValueStorageTest() = GlobalScope.runBlocking {
         valueStorage.awaitLoading()
         println(++launchNumber)
-        valueStorage.awaitSaving()
+        valueStorage.awaitLastCommit()
     }
 }

@@ -42,6 +42,13 @@ open class KDataStorage(
     /* Internal Storage API */
     private val baseStorage = BaseStorage(path)
 
+    // Store for value references. Useful is value is mutable to save it later
+    private val referencesSource: MutableMap<String, Pair<Any?, KSerializer<*>>> = mutableMapOf()
+    internal fun <T> saveReference(name: String, value: T, serializer: KSerializer<T>) {
+        referencesSource[name] = value to serializer
+    }
+    internal fun getReference(name: String) = referencesSource[name]?.component1()
+
     private var dataSource: MutableMap<String, JsonElement>? = null
     internal val data get() = runBlocking { awaitLoading() }.let {
         dataSource ?: error("Internal error, because storage is not loaded. " +
@@ -58,9 +65,26 @@ open class KDataStorage(
         mutex.withLock {
             savingDeferred?.cancel()
             savingDeferred = async {
+                saveReferencesToData()
                 baseStorage.saveStorage(Json.encodeToString(data))
             }
             savingDeferred ?: error("Unreachable error")
+        }
+    }
+
+    /**
+     * Encodes all values from [referencesSource] to JsonElement and puts it to [data]
+     */
+    private suspend fun saveReferencesToData() {
+        mutex.withLock {
+            for((name, pair) in referencesSource) {
+                val (value, serializer) = pair
+                @Suppress("UNCHECKED_CAST")
+                fun <T> uncheckedSet(serializer: KSerializer<T>) {
+                    data[name] = Json.encodeToJsonElement(serializer, value as T)
+                }
+                uncheckedSet(serializer)
+            }
         }
     }
 
@@ -92,7 +116,7 @@ open class KDataStorage(
     /**
      * Should be done at the end of storage usage (e.g. in console apps before it closes; useless in android)
      */
-    suspend fun awaitSaving() = savingDeferred?.join().unit
+    suspend fun awaitLastCommit() = savingDeferred?.join().unit
 }
 
 

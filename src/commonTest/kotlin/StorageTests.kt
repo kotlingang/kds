@@ -7,6 +7,7 @@ import kotlin.test.Test
 object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ path("...") })
     var launchesCount by property(0)
     var list by property(listOf<String>())
+    val mutableList by property(mutableListOf<String>())
 }
 
 
@@ -24,14 +25,21 @@ class StorageTests {
 
             println("List: $myList")
 
-            awaitSaving()
+            awaitLastCommit()
         }
     }
     @Test
     fun storageTestWithoutLoadAwaiting() = GlobalScope.runBlocking {
         with(Storage) {
             println("Launches: ${++launchesCount}")
-            awaitSaving()
+            awaitLastCommit()
+        }
+    }
+    @Test
+    fun mutableStorageTest() = GlobalScope.runBlocking {
+        with(Storage) {
+            mutableList += "Test"
+            commit()
         }
     }
 }
