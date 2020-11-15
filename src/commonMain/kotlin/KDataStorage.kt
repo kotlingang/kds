@@ -50,25 +50,27 @@ open class KDataStorage(
     internal fun getReference(name: String) = referencesSource[name]?.component1()
 
     private var dataSource: MutableMap<String, JsonElement>? = null
-    internal val data get() = runBlocking { awaitLoading() }.let {
-        dataSource ?: error("Internal error, because storage is not loaded. " +
-            "You shouldn't see this error, please create an issue. To fix it try awaitLoading before using storage")
+    internal val data get() = runBlockingPlatform { awaitLoading() }.let { setup ->
+        dataSource ?: if(setup) {
+            error("Internal error, because storage is not loaded. " +
+                    "You shouldn't see this error, please create an issue. " +
+                    "To fix it try awaitLoading before using storage")
+        } else error("Your target (js) cannot setup storage blocking. Please call awaitLoading() first")
     }
 
     private val mutex = Mutex()
-    private var savingDeferred: Deferred<Unit>? = null
+    private var savingJob: Job? = null
     /**
      * Prevents redundant operations when it called one by one.
-     * [runBlocking] used there because there is no heavy operations, just thread-safety
+     * [runTestBlocking] used there because there is no heavy operations, just thread-safety
      */
-    private fun privateCommitAsync(): Deferred<Unit> = runBlocking {
+    private fun privateLaunchCommit() = launch {
         mutex.withLock {
-            savingDeferred?.cancel()
-            savingDeferred = async {
+            savingJob?.cancel()
+            savingJob = launch {
                 saveReferencesToData()
                 baseStorage.saveStorage(Json.encodeToString(data))
             }
-            savingDeferred ?: error("Unreachable error")
         }
     }
 
@@ -106,7 +108,7 @@ open class KDataStorage(
     /**
      *  Call it if mutable data was changed to commit data async
      */
-    fun launchCommit() = launch { privateCommitAsync().await() }
+    fun launchCommit() = privateLaunchCommit()
 
     /**
      * Call it if mutable data was changed to commit data sync
@@ -116,7 +118,7 @@ open class KDataStorage(
     /**
      * Should be done at the end of storage usage (e.g. in console apps before it closes; useless in android)
      */
-    suspend fun awaitLastCommit() = savingDeferred?.join().unit
+    suspend fun awaitLastCommit() = savingJob?.join().unit
 }
 
 

@@ -11,7 +11,7 @@ var launchNumber by valueStorage
 
 class ValueStorageTests {
     @Test
-    fun simpleValueStorageTest() = GlobalScope.runBlocking {
+    fun simpleValueStorageTest() = GlobalScope.runTestBlocking {
         valueStorage.awaitLoading()
         println(++launchNumber)
         valueStorage.awaitLastCommit()

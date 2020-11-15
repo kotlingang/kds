@@ -5,6 +5,10 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 
 
-expect fun <T> CoroutineScope.runBlocking(block: suspend CoroutineScope.() -> T): T
+/**
+ * @return true if current target can run coroutine blocking
+ */
+expect fun CoroutineScope.runBlockingPlatform(block: suspend CoroutineScope.() -> Unit): Boolean
 
-fun  <T> Deferred<T>.awaitBlocking(scope: CoroutineScope = GlobalScope) = scope.runBlocking { await() }
+expect fun CoroutineScope.runTestBlocking(block: suspend CoroutineScope.() -> Unit)
+

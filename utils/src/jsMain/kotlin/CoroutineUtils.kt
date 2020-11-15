@@ -1,12 +1,17 @@
 package com.kotlingang.kds
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.promise
+import kotlinx.coroutines.*
+import kotlin.js.Promise
 
 
-actual fun <T> CoroutineScope.runBlocking(block: suspend CoroutineScope.() -> T): T {
+actual fun CoroutineScope.runTestBlocking(block: suspend CoroutineScope.() -> Unit) {
     val promise = promise {
         block()
     }
-    return eval("(promise) => (async () => await promise)()")(promise) as T
+    eval("(promise) => async () => await promise")(promise)()
 }
+
+/**
+ * @return true if current target can run coroutine blocking
+ */
+actual fun CoroutineScope.runBlockingPlatform(block: suspend CoroutineScope.() -> Unit) = false

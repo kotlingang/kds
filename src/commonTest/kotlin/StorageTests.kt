@@ -13,7 +13,7 @@ object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ 
 
 class StorageTests {
     @Test
-    fun simpleStorageTest() = GlobalScope.runBlocking {
+    fun simpleStorageTest() = GlobalScope.runTestBlocking {
         with(Storage) {
             awaitLoading()
 
@@ -29,15 +29,17 @@ class StorageTests {
         }
     }
     @Test
-    fun storageTestWithoutLoadAwaiting() = GlobalScope.runBlocking {
+    fun storageTestWithoutLoadAwaiting() = GlobalScope.runTestBlocking {
         with(Storage) {
+            awaitLoading()  // for JS
             println("Launches: ${++launchesCount}")
             awaitLastCommit()
         }
     }
     @Test
-    fun mutableStorageTest() = GlobalScope.runBlocking {
+    fun mutableStorageTest() = GlobalScope.runTestBlocking {
         with(Storage) {
+            awaitLoading()  // for JS
             mutableList += "Test"
             commit()
         }
