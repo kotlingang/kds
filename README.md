@@ -28,7 +28,7 @@ suspend fun main() = with(Storage) {
 
     println("List: $myList")
 
-    awaitSaving()  // If there is an launched coroutine with storage saving, await it before closing program
+    awaitLastCommit()  // If there is an launched coroutine with storage saving, await it before closing program
 }
 ```
 
@@ -39,8 +39,8 @@ val launchesCount by storage
 
 suspend fun main() {
     storage.awaitLoading()
-    println("${++launchesCout}")
-    storage.awaitSaving()
+    println("${++launchesCount}")
+    storage.awaitLastCommit()
 }
 ```
 
