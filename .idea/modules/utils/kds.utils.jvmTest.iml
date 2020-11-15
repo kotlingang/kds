@@ -6,8 +6,8 @@
         <dependsOnModuleNames>:utils:commonTest</dependsOnModuleNames>
         <sourceSets>
           <sourceSet>kds.utils.jvmMain</sourceSet>
-          <sourceSet>kds.utils.commonTest</sourceSet>
           <sourceSet>kds.utils.commonMain</sourceSet>
+          <sourceSet>kds.utils.commonTest</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <externalSystemTestTasks>
@@ -26,7 +26,7 @@
           <option name="friendPaths">
             <array>
               <option value="$MODULE_DIR$/../../../utils/build/classes/kotlin/jvm/main" />
-              <option value="$MODULE_DIR$/../../../utils/build/libs/utils-jvm-1.1.jar" />
+              <option value="$MODULE_DIR$/../../../utils/build/libs/utils-jvm-1.2.1.jar" />
             </array>
           </option>
           <option name="languageVersion" value="1.4" />

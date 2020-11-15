@@ -69,7 +69,7 @@ open class KDataStorage(
             savingJob?.cancel()
             savingJob = launch {
                 saveReferencesToData()
-                baseStorage.saveStorage(Json.encodeToString(data))
+                baseStorage.saveStorage(json.encodeToString(data))
             }
         }
     }
@@ -83,7 +83,7 @@ open class KDataStorage(
                 val (value, serializer) = pair
                 @Suppress("UNCHECKED_CAST")
                 fun <T> uncheckedSet(serializer: KSerializer<T>) {
-                    data[name] = Json.encodeToJsonElement(serializer, value as T)
+                    data[name] = json.encodeToJsonElement(serializer, value as T)
                 }
                 uncheckedSet(serializer)
             }
@@ -98,7 +98,7 @@ open class KDataStorage(
     inline fun <reified T> property(default: T) = property(json.serializersModule.serializer(), default)
 
     private val loadingDeferred = async {
-        dataSource = Json.decodeFromString(baseStorage.loadStorage() ?: "{}")
+        dataSource = json.decodeFromString(baseStorage.loadStorage() ?: "{}")
     }
     /**
      * Await first loading; Should be done before storage usage
