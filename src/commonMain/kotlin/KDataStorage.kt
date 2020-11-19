@@ -4,6 +4,7 @@ package com.kotlingang.kds
 
 import com.kotlingang.kds.builder.StorageConfig
 import com.kotlingang.kds.delegate.PropertyDelegate
+import com.kotlingang.kds.delegate.PropertyDelegateProvider
 import com.kotlingang.kds.storage.BaseStorage
 import com.kotlingang.kds.storage.dirPath
 import com.kotlingang.kds.storage.joinPath
@@ -13,7 +14,6 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.serializer
 import kotlin.coroutines.CoroutineContext
@@ -94,8 +94,11 @@ open class KDataStorage(
 
     /* ----- */
 
-    fun <T> property(serializer: KSerializer<T>, default: T) = PropertyDelegate(serializer, default)
+    fun <T> property(serializer: KSerializer<T>, default: T) = property<T>(serializer) { default }
     inline fun <reified T> property(default: T) = property(json.serializersModule.serializer(), default)
+
+    fun <T> property(serializer: KSerializer<T>, lazyDefault: () -> T) = PropertyDelegateProvider(serializer, lazyDefault)
+    inline fun <reified T> property(noinline lazyDefault: () -> T) = property<T>(json.serializersModule.serializer(), lazyDefault)
 
     private val loadingDeferred = async {
         dataSource = json.decodeFromString(baseStorage.loadStorage() ?: "{}")

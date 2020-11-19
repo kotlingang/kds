@@ -5,9 +5,9 @@
       <configuration version="3" platform="JavaScript " allPlatforms="JS []" useProjectSettings="false" isTestModule="true" externalProjectId=":utils">
         <dependsOnModuleNames>:utils:commonTest</dependsOnModuleNames>
         <sourceSets>
+          <sourceSet>kds.utils.jsMain</sourceSet>
           <sourceSet>kds.utils.commonTest</sourceSet>
           <sourceSet>kds.utils.commonMain</sourceSet>
-          <sourceSet>kds.utils.jsMain</sourceSet>
         </sourceSets>
         <newMppModelJpsModuleKind>COMPILATION_AND_SOURCE_SET_HOLDER</newMppModelJpsModuleKind>
         <externalSystemTestTasks>
