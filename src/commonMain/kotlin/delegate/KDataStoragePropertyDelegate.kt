@@ -47,6 +47,7 @@ class KDataStoragePropertyDelegate<T> internal constructor (
             val element = storage.data[property.name]
             val value = element?.let { storage.json.decodeFromJsonElement(serializer, element) } ?: lazyDefault()
             storage.saveReference(property.name, value, serializer)
+            storage.launchCommit()
             value
         } else {
             reference
