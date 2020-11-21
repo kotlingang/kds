@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="kds-browser-1.1">
-    <output-path>C:\Users\admin\IdeaProjects\kds\build\libs</output-path>
-    <root id="archive" name="kds-browser-1.1.jar">
-      <element id="module-output" name="kds.browserMain" />
-    </root>
-  </artifact>
-</component>

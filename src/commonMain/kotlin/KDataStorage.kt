@@ -3,8 +3,7 @@
 package com.kotlingang.kds
 
 import com.kotlingang.kds.builder.StorageConfig
-import com.kotlingang.kds.delegate.PropertyDelegate
-import com.kotlingang.kds.delegate.PropertyDelegateProvider
+import com.kotlingang.kds.delegate.KDataStorageProperty
 import com.kotlingang.kds.storage.BaseStorage
 import com.kotlingang.kds.storage.dirPath
 import com.kotlingang.kds.storage.joinPath
@@ -97,7 +96,7 @@ open class KDataStorage(
     fun <T> property(serializer: KSerializer<T>, default: T) = property<T>(serializer) { default }
     inline fun <reified T> property(default: T) = property(json.serializersModule.serializer(), default)
 
-    fun <T> property(serializer: KSerializer<T>, lazyDefault: () -> T) = PropertyDelegateProvider(serializer, lazyDefault)
+    fun <T> property(serializer: KSerializer<T>, lazyDefault: () -> T) = KDataStorageProperty(serializer, lazyDefault)
     inline fun <reified T> property(noinline lazyDefault: () -> T) = property<T>(json.serializersModule.serializer(), lazyDefault)
 
     private val loadingDeferred = async {
@@ -117,6 +116,15 @@ open class KDataStorage(
      * Call it if mutable data was changed to commit data sync
      */
     suspend fun commit() = launchCommit().join()
+
+    /**
+     * Clear property value
+     */
+    fun clear(propertyName: String) = synchronized(this) {
+        referencesSource.remove(propertyName)
+        data.remove(propertyName)
+        launchCommit()
+    }
 
     /**
      * Should be done at the end of storage usage (e.g. in console apps before it closes; useless in android)

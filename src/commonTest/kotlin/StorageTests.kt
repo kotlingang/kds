@@ -12,6 +12,10 @@ class MassiveTestClass
 
 object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ path("...") })
     var random by property { Random.nextLong() }
+
+    val random2Delegate = property { Random.nextInt() }
+    var random2 by random2Delegate
+
     var launchesCount by property(0)
     var list by property(listOf<String>())
     val mutableList by property(mutableListOf<String>())
@@ -65,6 +69,14 @@ class StorageTests {
                 valueRef = valueRef ?: value
                 println(valueRef === value)
             }
+        }
+    }
+    @Test
+    fun clearTest() = GlobalScope.runTestBlocking {
+        with(Storage) {
+            println(random2)
+            random2Delegate.clear()
+            println(random2)
         }
     }
 }

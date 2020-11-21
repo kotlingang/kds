@@ -11,7 +11,7 @@ Kotlin Data Storage is a multiplatform coroutine-based kotlin library for saving
 ```kotlin
 object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ path("...") })
     var launchesCount by property(0)
-    var list by property(listOf<String>())
+    var list by property(mutableListOf<String>())
 }
 
 
@@ -20,11 +20,9 @@ suspend fun main() = with(Storage) {
 
     println("Launches: ${++launchesCount}")
     
-    // Note that you shouldn't use mutable values in storage because it will not be notified when property changed
-    // Also storage does not store references and I cannot implement [storage.apply] method right now
-    val myList = list.toMutableList()   
-    myList.add("Element")
-    list = myList
+    list.add("Element")
+    // should be commit to save edited list
+    launchCommit()
 
     println("List: $myList")
 
