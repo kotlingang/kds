@@ -3,16 +3,8 @@
 package com.kotlingang.kds.delegate
 
 import com.kotlingang.kds.KDataStorage
-import com.kotlingang.kds.synchronized
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import com.kotlingang.kds.withLock
 import kotlinx.serialization.KSerializer
-import kotlin.coroutines.CoroutineContext
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 
@@ -38,7 +30,8 @@ class KDataStoragePropertyDelegate<T> internal constructor (
         private val serializer: KSerializer<T>,
         private val lazyDefault: () -> T
 ) {
-    operator fun getValue(storage: KDataStorage, property: KProperty<*>): T = synchronized(storage) {
+    operator fun getValue(storage: KDataStorage, property: KProperty<*>): T {
+        storage.blockingLocker.lock()
         val reference = storage.getReference(property.name)
 
         // If there is reference then value was already gotten with this method
@@ -47,15 +40,19 @@ class KDataStoragePropertyDelegate<T> internal constructor (
             val element = storage.data[property.name]
             val value = element?.let { storage.json.decodeFromJsonElement(serializer, element) } ?: lazyDefault()
             storage.saveReference(property.name, value, serializer)
+            storage.blockingLocker.unlock()
             storage.launchCommit()
             value
         } else {
+            storage.blockingLocker.unlock()
             reference
         } as T
     }
 
-    operator fun setValue(storage: KDataStorage, property: KProperty<*>, value: T) = synchronized(storage) {
-        storage.saveReference(property.name, value, serializer)
+    operator fun setValue(storage: KDataStorage, property: KProperty<*>, value: T) {
+        storage.blockingLocker.withLock {
+            storage.saveReference(property.name, value, serializer)
+        }
         storage.launchCommit()
     }
 }

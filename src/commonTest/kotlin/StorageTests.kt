@@ -1,6 +1,7 @@
 package com.kotlingang.kds
 
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlin.random.Random
@@ -20,7 +21,6 @@ object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ 
     var list by property(listOf<String>())
     val mutableList by property(mutableListOf<String>())
     var massiveTestProp by property {
-        println("Created")
         MassiveTestClass()
     }
 }
@@ -36,19 +36,13 @@ class StorageTests {
             println("Random value: $random")
 
             val myList = list.toMutableList()
+            println("My list set")
             myList.add("Element")
             list = myList
+            println("My list saved")
 
             println("List: $myList")
 
-            awaitLastCommit()
-        }
-    }
-    @Test
-    fun storageTestWithoutLoadAwaiting() = GlobalScope.runTestBlocking {
-        with(Storage) {
-            awaitLoading()  // for JS
-            println("Launches: ${++launchesCount}")
             awaitLastCommit()
         }
     }
@@ -58,17 +52,6 @@ class StorageTests {
             awaitLoading()  // for JS
             mutableList += "Test"
             commit()
-        }
-    }
-    @Test
-    fun massiveTest() = GlobalScope.runTestBlocking {
-        var valueRef: Any? = null
-        with(Storage) {
-            for(i in 1..1000) launch {
-                val value = massiveTestProp
-                valueRef = valueRef ?: value
-                println(valueRef === value)
-            }
         }
     }
     @Test

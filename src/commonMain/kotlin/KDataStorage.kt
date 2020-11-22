@@ -8,8 +8,6 @@ import com.kotlingang.kds.storage.BaseStorage
 import com.kotlingang.kds.storage.dirPath
 import com.kotlingang.kds.storage.joinPath
 import kotlinx.coroutines.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -31,6 +29,8 @@ open class KDataStorage(
         name(name)
         builder()
     })
+
+    internal val blockingLocker = SpinLocker()
 
     private val defaultPath = dirPath.joinPath("data")
     private val config = StorageConfig(defaultPath).apply(builder)
@@ -56,28 +56,28 @@ open class KDataStorage(
                     "To fix it try awaitLoading before using storage")
         } else error("Your target (js) cannot setup storage blocking. Please call awaitLoading() first")
     }
-
-    private val mutex = Mutex()
     private var savingJob: Job? = null
     /**
      * Prevents redundant operations when it called one by one.
      * [runTestBlocking] used there because there is no heavy operations, just thread-safety
      */
-    private fun privateLaunchCommit() = launch {
-        mutex.withLock {
-            savingJob?.cancel()
-            savingJob = launch {
-                saveReferencesToData()
+    private fun privateLaunchCommit() = blockingLocker.withLock {
+        savingJob?.cancel()
+        return@withLock launch {
+            saveReferencesToData()
+            blockingLocker.withLock {
                 baseStorage.saveStorage(json.encodeToString(data))
             }
+        }.also { job ->
+            savingJob = job
         }
     }
 
     /**
      * Encodes all values from [referencesSource] to JsonElement and puts it to [data]
      */
-    private suspend fun saveReferencesToData() {
-        mutex.withLock {
+    private fun saveReferencesToData() {
+        blockingLocker.withLock {
             for((name, pair) in referencesSource) {
                 val (value, serializer) = pair
                 @Suppress("UNCHECKED_CAST")
@@ -120,9 +120,11 @@ open class KDataStorage(
     /**
      * Clear property value
      */
-    fun clear(propertyName: String) = synchronized(this) {
-        referencesSource.remove(propertyName)
-        data.remove(propertyName)
+    fun clear(propertyName: String) {
+        blockingLocker.withLock {
+            referencesSource.remove(propertyName)
+            data.remove(propertyName)
+        }
         launchCommit()
     }
 
