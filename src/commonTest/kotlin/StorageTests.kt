@@ -30,9 +30,11 @@ class StorageTests {
     @Test
     fun simpleStorageTest() = GlobalScope.runTestBlocking {
         with(Storage) {
+            println("Awaiting loading")
             awaitLoading()
+            println("Awaited loading")
 
-            println("Launches: ${++launchesCount}")
+            println("Launches count: ${++launchesCount}")
             println("Random value: $random")
 
             val myList = list.toMutableList()

@@ -11,5 +11,5 @@ actual fun CoroutineScope.runTestBlocking(block: suspend CoroutineScope.() -> Un
 /**
  * @return true if current target can run coroutine blocking
  */
-actual fun CoroutineScope.runBlockingPlatform(block: suspend CoroutineScope.() -> Unit)
-        = runTestBlocking(block).let { true }
+actual fun <T> runBlockingPlatform(block: suspend CoroutineScope.() -> T): Pair<Boolean, T?>
+        = runBlocking { block() }.let { true to it }

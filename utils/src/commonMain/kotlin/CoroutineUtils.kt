@@ -8,7 +8,7 @@ import kotlinx.coroutines.GlobalScope
 /**
  * @return true if current target can run coroutine blocking
  */
-expect fun CoroutineScope.runBlockingPlatform(block: suspend CoroutineScope.() -> Unit): Boolean
+expect fun <T> runBlockingPlatform(block: suspend CoroutineScope.() -> T): Pair<Boolean, T?>
 
 expect fun CoroutineScope.runTestBlocking(block: suspend CoroutineScope.() -> Unit)
 

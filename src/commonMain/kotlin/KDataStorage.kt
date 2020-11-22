@@ -30,7 +30,7 @@ open class KDataStorage(
         builder()
     })
 
-    internal val blockingLocker = SpinLocker()
+    internal val blockingLocker = PlatformLocker()
 
     private val defaultPath = dirPath.joinPath("data")
     private val config = StorageConfig(defaultPath).apply(builder)
@@ -49,7 +49,7 @@ open class KDataStorage(
     internal fun getReference(name: String) = referencesSource[name]?.component1()
 
     private var dataSource: MutableMap<String, JsonElement>? = null
-    internal val data get() = runBlockingPlatform { awaitLoading() }.let { setup ->
+    internal val data get() = runBlockingPlatform { awaitLoading() }.let { (setup) ->
         dataSource ?: if(setup) {
             error("Internal error, because storage is not loaded. " +
                     "You shouldn't see this error, please create an issue. " +
@@ -65,9 +65,9 @@ open class KDataStorage(
         savingJob?.cancel()
         return@withLock launch {
             saveReferencesToData()
-            blockingLocker.withLock {
-                baseStorage.saveStorage(json.encodeToString(data))
-            }
+            // to prevent concurrent modification exception
+            val json = blockingLocker.withLock { json.encodeToString(data) }
+            baseStorage.saveStorage(json)
         }.also { job ->
             savingJob = job
         }
