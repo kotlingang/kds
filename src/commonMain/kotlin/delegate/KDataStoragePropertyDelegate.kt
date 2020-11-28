@@ -30,8 +30,7 @@ class KDataStoragePropertyDelegate<T> internal constructor (
         private val serializer: KSerializer<T>,
         private val lazyDefault: () -> T
 ) {
-    operator fun getValue(storage: KDataStorage, property: KProperty<*>): T {
-        storage.blockingLocker.lock()
+    operator fun getValue(storage: KDataStorage, property: KProperty<*>): T = storage.blockingLocker.withLock {
         val reference = storage.getReference(property.name)
 
         // If there is reference then value was already gotten with this method
@@ -40,19 +39,15 @@ class KDataStoragePropertyDelegate<T> internal constructor (
             val element = storage.data[property.name]
             val value = element?.let { storage.json.decodeFromJsonElement(serializer, element) } ?: lazyDefault()
             storage.saveReference(property.name, value, serializer)
-            storage.blockingLocker.unlock()
             storage.launchCommit()
             value
-        } else {
-            storage.blockingLocker.unlock()
-            reference
-        } as T
+        } else reference as T
     }
 
     operator fun setValue(storage: KDataStorage, property: KProperty<*>, value: T) {
         storage.blockingLocker.withLock {
             storage.saveReference(property.name, value, serializer)
+            storage.launchCommit()
         }
-        storage.launchCommit()
     }
 }

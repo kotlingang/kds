@@ -61,16 +61,18 @@ open class KDataStorage(
      * Prevents redundant operations when it called one by one.
      * [runTestBlocking] used there because there is no heavy operations, just thread-safety
      */
-    private fun privateLaunchCommit() = blockingLocker.withLock {
-        savingJob?.cancel()
-        return@withLock launch {
-            saveReferencesToData()
-            // to prevent concurrent modification exception
-            val json = blockingLocker.withLock { json.encodeToString(data) }
-            baseStorage.saveStorage(json)
-        }.also { job ->
-            savingJob = job
-        }
+    private fun privateLaunchCommit() = launch {
+        blockingLocker.withLock {
+            savingJob?.cancel()
+            return@withLock launch {
+                saveReferencesToData()
+                // to prevent concurrent modification exception
+                val json = blockingLocker.withLock { json.encodeToString(data) }
+                baseStorage.saveStorage(json)
+            }.also { job ->
+                savingJob = job
+            }
+        }.join()
     }
 
     /**
