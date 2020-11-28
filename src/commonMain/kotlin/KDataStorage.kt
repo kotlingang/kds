@@ -41,14 +41,16 @@ open class KDataStorage(
     /* Internal Storage API */
     private val baseStorage = BaseStorage(path)
 
-    // Store for value references. Useful is value is mutable to save it later
+    // Store for value references. Used to save mutable objects
     private val referencesSource: MutableMap<String, Pair<Any?, KSerializer<*>>> = mutableMapOf()
     internal fun <T> saveReference(name: String, value: T, serializer: KSerializer<T>) {
         referencesSource[name] = value to serializer
     }
     internal fun getReference(name: String) = referencesSource[name]?.component1()
 
+    // Store for encoded values
     private var dataSource: MutableMap<String, JsonElement>? = null
+    // When get, try to await it blocking or error 
     internal val data get() = runBlockingPlatform { awaitLoading() }.let { (setup) ->
         dataSource ?: if(setup) {
             error("Internal error, because storage is not loaded. " +
@@ -56,10 +58,11 @@ open class KDataStorage(
                     "To fix it try awaitLoading before using storage")
         } else error("Your target (js) cannot setup storage blocking. Please call awaitLoading() first")
     }
+    
     private var savingJob: Job? = null
     /**
      * Prevents redundant operations when it called one by one.
-     * [runTestBlocking] used there because there is no heavy operations, just thread-safety
+     * [blockingLocker] used there because there is no heavy operations, just thread-safety
      */
     private fun privateLaunchCommit() = launch {
         blockingLocker.withLock {
@@ -76,7 +79,8 @@ open class KDataStorage(
     }
 
     /**
-     * Encodes all values from [referencesSource] to JsonElement and puts it to [data]
+     * Encodes all values from [referencesSource] to JsonElement and puts it to [data].
+     * So state of mutable objects will be saved
      */
     private fun saveReferencesToData() {
         blockingLocker.withLock {
@@ -117,7 +121,7 @@ open class KDataStorage(
     /**
      * Call it if mutable data was changed to commit data sync
      */
-    suspend fun commit() = launchCommit().join()
+    suspend fun commit() = privateLaunchCommit().join()
 
     /**
      * Clear property value
