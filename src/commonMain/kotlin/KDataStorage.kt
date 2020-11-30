@@ -46,7 +46,10 @@ open class KDataStorage(
     internal fun <T> saveReference(name: String, value: T, serializer: KSerializer<T>) {
         referencesSource[name] = value to serializer
     }
-    internal fun getReference(name: String) = referencesSource[name]?.component1()
+    internal fun getReference(name: String): Pair<Boolean, Any?> {
+        val reference = referencesSource[name]
+        return (reference != null) to reference?.component1()
+    }
 
     // Store for encoded values
     private var dataSource: MutableMap<String, JsonElement>? = null
