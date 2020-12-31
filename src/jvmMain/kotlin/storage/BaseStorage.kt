@@ -1,6 +1,8 @@
 package com.kotlingang.kds.storage
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import java.io.File
 import java.io.IOException
@@ -14,22 +16,11 @@ internal actual class BaseStorage actual constructor(actual val path: String) {
         createNewFile()
     }
 
-    actual suspend fun saveStorage(text: String) {
-        val writer = file.writer()
-        flowOf(*text.toList().toTypedArray()).collect(writer::append)
-        writer.close()
+    actual suspend fun saveStorage(text: String) = withContext(Dispatchers.IO) {
+        file.writeText(text)
     }
 
-    actual suspend fun loadStorage(): String? {
-        val reader = file.reader()
-
-        val chars = flow {
-            while(true) {
-                emit(reader.read())
-            }
-        }.takeWhile { it != -1 }.map(Int::toChar).toList()
-
-        return String(chars.toCharArray()).takeIf(String::isNotBlank)
+    actual suspend fun loadStorage(): String? = withContext(Dispatchers.IO) {
+        file.readText().takeIf(String::isNotBlank)
     }
-
 }
