@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.kotlingang.kds"
-version = "1.2.6"
+version = "1.2.8"
 
 repositories {
     jcenter()
