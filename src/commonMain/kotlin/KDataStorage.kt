@@ -102,11 +102,14 @@ open class KDataStorage(
 
     /* ----- */
 
+    fun <T> property(serializer: KSerializer<T>, lazyDefault: () -> T) = KDataStorageProperty(serializer, lazyDefault)
+    inline fun <reified T> property(noinline lazyDefault: () -> T) = property<T>(json.serializersModule.serializer(), lazyDefault)
+
     fun <T> property(serializer: KSerializer<T>, default: T) = property<T>(serializer) { default }
     inline fun <reified T> property(default: T) = property(json.serializersModule.serializer(), default)
 
-    fun <T> property(serializer: KSerializer<T>, lazyDefault: () -> T) = KDataStorageProperty(serializer, lazyDefault)
-    inline fun <reified T> property(noinline lazyDefault: () -> T) = property<T>(json.serializersModule.serializer(), lazyDefault)
+    fun <T> property(serializer: KSerializer<T?>) = property(serializer, default = null)
+    inline fun <reified T> property() = property<T?>(json.serializersModule.serializer())
 
     private val loadingDeferred = async {
         dataSource = json.decodeFromString(baseStorage.loadStorage() ?: "{}")

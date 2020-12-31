@@ -1,6 +1,5 @@
 @file:Suppress("UNUSED_VARIABLE")
 
-import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
 
@@ -11,7 +10,7 @@ plugins {
 }
 
 group = "com.kotlingang.kds"
-version = "1.2.10"
+version = "1.2.11"
 
 repositories {
     jcenter()
