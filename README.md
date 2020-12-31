@@ -23,6 +23,11 @@ suspend fun main() = with(Storage) {
     list.add("Element")
     // should be commit to save edited list
     launchCommit()
+    
+    // Or
+    mutate {
+        list.add("Element")
+    }
 
     println("List: $myList")
 

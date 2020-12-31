@@ -141,4 +141,12 @@ open class KDataStorage(
 }
 
 
+/**
+ * Edit mutable values inside block
+ */
+inline fun <T : KDataStorage> T.mutate(block: T.() -> Unit) {
+    block()
+    launchCommit()
+}
+
 private fun KClass<*>.getDefaultFilename() = simpleName ?: "noname"
