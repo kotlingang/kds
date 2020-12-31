@@ -111,13 +111,13 @@ open class KDataStorage(
     fun <T> property(serializer: KSerializer<T?>) = property(serializer, default = null)
     inline fun <reified T> property() = property<T?>(json.serializersModule.serializer())
 
-    private val loadingDeferred = async {
+    private val loadingJob = launch {
         dataSource = json.decodeFromString(baseStorage.loadStorage() ?: "{}")
     }
     /**
      * Await first loading; Should be done before storage usage
      */
-    suspend fun awaitLoading() = loadingDeferred.await()
+    suspend fun awaitLoading() = loadingJob.join()
 
     /**
      *  Call it if mutable data was changed to commit data async
