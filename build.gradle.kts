@@ -2,7 +2,7 @@
 import `fun`.kotlingang.deploy.DeployEntity
 
 plugins {
-    kotlin(plugin.multiplatformn)
+    kotlin(plugin.multiplatform)
     kotlin(plugin.serialization) version Version.SERIALIZATION_PLUGIN
 }
 
@@ -56,14 +56,6 @@ val root = project
 allprojects {
     group = root.group
     version = root.version
-}
-
-project.configure<DeployEntity> {
-    group = AppInfo.PACKAGE
-    artifactId = AppInfo.ARTIFACT_ID
-    version = AppInfo.VERSION
-    name = AppInfo.NAME
-    description = AppInfo.DESCRIPTION
 }
 
 /**

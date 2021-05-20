@@ -2,7 +2,7 @@
 
 
 plugins {
-    kotlin(plugin.multiplatformn)
+    kotlin(plugin.multiplatform)
 }
 
 repositories {

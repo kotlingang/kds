@@ -11,7 +11,7 @@ import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
 
-data class DeployProperties(
+open class DeployProperties(
     var host: String? = null,
     var port: Int = 22,
     var username: String? = null,
@@ -19,7 +19,7 @@ data class DeployProperties(
     var deployPath: String? = null
 )
 
-data class DeployEntity(
+open class DeployEntity(
     var group: String? = null,
     var artifactId: String? = null,
     var version: String? = null,
@@ -82,10 +82,7 @@ class Deploy : Plugin<Project> {
                         version = entity.version ?: error("shouldn't be null")
 
                         url = uri(
-                            if(config.port == 22)
-                                "sftp"
-                            else "ftp"
-                                + "://${config.host}:${config.port}/${config.deployPath}"
+                            "sftp://${config.host}:${config.port}/${config.deployPath}"
                         )
 
                         credentials {

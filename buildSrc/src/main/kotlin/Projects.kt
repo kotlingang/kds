@@ -1,4 +1,5 @@
 import `fun`.kotlingang.deploy.Deploy
+import `fun`.kotlingang.deploy.DeployEntity
 import `fun`.kotlingang.deploy.DeployProperties
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -24,6 +25,14 @@ fun Project.applyDeploy() {
             host = properties.getProperty("host")
             password = properties.getProperty("password")
             deployPath = properties.getProperty("destination")
+        }
+
+        project.configure<DeployEntity> {
+            group = AppInfo.PACKAGE
+            artifactId = AppInfo.ARTIFACT_ID
+            version = AppInfo.VERSION
+            name = AppInfo.NAME
+            description = AppInfo.DESCRIPTION
         }
     }
 }
