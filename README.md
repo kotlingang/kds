@@ -1,4 +1,4 @@
-[![Last Version](https://img.shields.io/maven-metadata/v?label=gang&metadataUrl=https://maven.kotlingang.fun/com/kotlingang/kds/kds/maven-metadata.xml&logo=kotlin&logoColor=white)](https://maven.kotlingang.fun/com/kotlingang/kds/kds)
+[![Last Version](https://badge.kotlingang.fun/maven/com/kotlingang/kds/kds/)](https://maven.kotlingang.fun/com/kotlingang/kds/kds)
 [![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/y9san9/kds)
 
 # kds
