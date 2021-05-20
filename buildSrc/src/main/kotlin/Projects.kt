@@ -1,3 +1,5 @@
+import `fun`.kotlingang.deploy.Deploy
+import `fun`.kotlingang.deploy.DeployProperties
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure

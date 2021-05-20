@@ -1,3 +1,6 @@
+package `fun`.kotlingang.deploy
+
+import DeployException
 import kotlin.reflect.KProperty0
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -34,7 +37,7 @@ internal fun <T> notNullPropertiesOrException(vararg fields: KProperty0<T?>) = f
 }
 
 /**
- * Deploy task.
+ * `fun`.kotlingang.deploy.Deploy task.
  * To applying should be also specified [DeployEntity] and [DeployProperties].
  */
 class Deploy : Plugin<Project> {

@@ -1,5 +1,5 @@
 @file:Suppress("UNUSED_VARIABLE")
-
+import `fun`.kotlingang.deploy.DeployEntity
 
 plugins {
     kotlin(plugin.multiplatformn)
@@ -60,10 +60,10 @@ allprojects {
 
 project.configure<DeployEntity> {
     group = AppInfo.PACKAGE
-    artifactId = Library.ARTIFACT_ID
+    artifactId = AppInfo.ARTIFACT_ID
     version = AppInfo.VERSION
-    name = Library.NAME
-    description = Library.DESCRIPTION
+    name = AppInfo.NAME
+    description = AppInfo.DESCRIPTION
 }
 
 /**
