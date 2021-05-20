@@ -1,8 +1,9 @@
-# kds
+![Last Version](https://img.shields.io/maven-metadata/v?label=gang&metadataUrl=https://maven.kotlingang.fun/com/kotlingang/kds/kds/maven-metadata.xml&logo=kotlin&logoColor=white)
 [![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/y9san9/kds)
 
+# kds
 
-Kotlin Data Storage is a multiplatform coroutine-based kotlin library for saving Serializables in file with kotlinx.serlaization and delegates
+Kotlin Data Storage is a multiplatform coroutine-based kotlin library for saving Serializables in file with kotlinx.serialization and delegates
 
 ## Example
 
@@ -14,16 +15,10 @@ object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ 
 }
 
 
-...
-with(Storage) { 
-    // Launches commit after changing mutable vars
-    mutate {
-        list.add("Element")
-    }
-    // Commit launched automatically because of delegate 
+suspend fun main() = Storage.commitMutate { 
+    list += "Element"
     launchesCount++
 }
-...
 ```
 
 ### Value Storage
@@ -31,49 +26,53 @@ with(Storage) {
 val storage = KValueStorage(0)
 val launchesCount by storage
 
-...
-println("${++launchesCount}")
-...
-```
-
-### Edge cases
-Because this framework is fully asynchronous, when using javascript, you should make `Storage.awaitLoading()` before usage. <br>
-
-This also the reason why you should do `Storage.awaitLastCommit()` if your app doesn't run infinitely (like bots, android apps, etc). Any variable change leads to creating coroutine that writing file (it is implemented safely), and when you stop the app, you should await it.
-
-So, the full example is:
-```kotlin
-suspend fun main() = with(Storage) {
-    awaitLoading()
-    foo = 0
-    awaitLastCommit()
+suspend fun main() = storage.commitMutate {
+    println("${++launchesCount}")
 }
 ```
-But in many apps it may be omitted. In non-js targets, you can omit `awaitLoading()`, in apps with any kind of lifecycle or that just infinitely running you can omit `awaitLastCommit()`.
 
-
-#### More about load/save awaiting: [#1](https://github.com/y9san9/kds/issues/1)
+## Non-coroutines way
+There is also a way for changing the storage without suspend context in infinitely-running apps:
+```kotlin
+class KindaActivity : CoroutineScope by ... {
+    // Scope is still optional
+    object Storage : KDataStorage(scope = this) {  // or KDataStorage("name") or KDataStorage({ path("...") })
+        var launchesCount by property(0)
+        var list by property(mutableListOf<String>())
+    }
+    
+    fun onCreate() = with(Storage) {
+        // Commit launches automatically since it is calling delegate
+        launchesCount++
+        
+        // Since list is mutable object, explicit mutation declaration required
+        mutate {
+            list += "Element"
+        }
+    }
+}
+```
 
 ## Installation
-`$version` - library version, can be found in releases
+`$version` - library version, can be found in badge above
 
 ### Groovy Gradle
 ```gradle
 repositories {
     maven {
-        url 'https://dl.bintray.com/y9san9/kotlingang'
+        url 'https://maven.kotlingang.fun/'
     }
 }
 dependencies {
-    implementation "com.kotlingang.kds:kds:$version"
+    implementation "fun.kotlingang.kds:kds:$version"
 }
 ```
 ### Kotlin Gradle Dsl
 ```gradle
 repositories {
-    maven("https://dl.bintray.com/y9san9/kotlingang")
+    maven("https://maven.kotlingang.fun/")
 }
 dependencies {
-    implementation("com.kotlingang.kds:kds:$version")
+    implementation("fun.kotlingang.kds:kds:$version")
 }
 ```

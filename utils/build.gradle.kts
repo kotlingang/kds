@@ -14,6 +14,7 @@ kotlin {
         browser()
         nodejs()
     }
+    jvm()
 
     sourceSets {
         val commonMain by getting {

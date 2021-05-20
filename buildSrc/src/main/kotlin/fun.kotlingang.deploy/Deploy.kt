@@ -42,6 +42,8 @@ internal fun <T> notNullPropertiesOrException(vararg fields: KProperty0<T?>) = f
  */
 class Deploy : Plugin<Project> {
     override fun apply(target: Project) {
+        target.apply(plugin = "maven-publish")
+
         val config = target.extensions.create<DeployProperties>(name = "deploy")
         val entity = target.extensions.create<DeployEntity>(name = "deploy entity")
 
@@ -59,8 +61,6 @@ class Deploy : Plugin<Project> {
             )
 
             project.the<PublishingExtension>().apply {
-                apply(plugin = "maven-publish")
-
                 publications {
                     create<MavenPublication>("deploy") {
                         group = entity.group ?: error("shouldn't be null")

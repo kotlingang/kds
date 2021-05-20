@@ -1,5 +1,5 @@
-import com.kotlingang.kds.PlatformLocker
-import com.kotlingang.kds.withLock
+import `fun`.kotlingang.kds.PlatformLocker
+import `fun`.kotlingang.kds.withLock
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

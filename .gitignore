@@ -7,3 +7,4 @@
 /jsCommon/build/
 /utils/build/
 /.idea/
+/deploy.properties
