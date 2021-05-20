@@ -2,7 +2,7 @@
 import `fun`.kotlingang.deploy.DeployEntity
 
 plugins {
-    kotlin(plugin.multiplatformn)
+    kotlin(plugin.multiplatform)
     kotlin(plugin.serialization) version Version.SERIALIZATION_PLUGIN
 }
 

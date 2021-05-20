@@ -1,5 +1,5 @@
 class Plugins internal constructor() {
-    val multiplatformn = "multiplatform"
+    val multiplatform = "multiplatform"
     val jvm = "jvm"
 
     val serialization = "plugin.serialization"
