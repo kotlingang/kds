@@ -57,3 +57,16 @@ allprojects {
     group = root.group
     version = root.version
 }
+
+project.configure<DeployEntity> {
+    group = AppInfo.PACKAGE
+    artifactId = Library.ARTIFACT_ID
+    version = AppInfo.VERSION
+    name = Library.NAME
+    description = Library.DESCRIPTION
+}
+
+/**
+ * Enables deploy for `:` if `deploy.properties` exists.
+ */
+project.applyDeploy()
