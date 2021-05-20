@@ -58,14 +58,6 @@ allprojects {
     version = root.version
 }
 
-project.configure<DeployEntity> {
-    group = AppInfo.PACKAGE
-    artifactId = AppInfo.ARTIFACT_ID
-    version = AppInfo.VERSION
-    name = AppInfo.NAME
-    description = AppInfo.DESCRIPTION
-}
-
 /**
  * Enables deploy for `:` if `deploy.properties` exists.
  */
