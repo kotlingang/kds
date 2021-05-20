@@ -1,10 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
-
-
-const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
-const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.1"
-
-const val nodejsExternals = "org.jetbrains.kotlinx:kotlinx-nodejs:0.0.7"
-
-
-val KotlinDependencyHandler.utils get() = project(":utils")
+const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Version.SERIALIZATION}"
+const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Version.COROUTINES}"
+const val nodejsExternals = "org.jetbrains.kotlinx:kotlinx-nodejs:${Version.NODEJS_EXTERNALS}"

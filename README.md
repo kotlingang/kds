@@ -1,5 +1,4 @@
 # kds
-[![Download](https://img.shields.io/bintray/v/y9san9/kotlingang/kds)](https://bintray.com/y9san9/kotlingang/kds/_latestVersion)
 [![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/y9san9/kds)
 
 
@@ -15,24 +14,16 @@ object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ 
 }
 
 
-suspend fun main() = with(Storage) {
-    awaitLoading()  // The loading is async and you should wait for it
-
-    println("Launches: ${++launchesCount}")
-    
-    list.add("Element")
-    // should be commit to save edited list
-    launchCommit()
-    
-    // Or
+...
+with(Storage) { 
+    // Launches commit after changing mutable vars
     mutate {
         list.add("Element")
     }
-
-    println("List: $myList")
-
-    awaitLastCommit()  // If there is an launched coroutine with storage saving, await it before closing program
+    // Commit launched automatically because of delegate 
+    launchesCount++
 }
+...
 ```
 
 ### Value Storage
@@ -40,17 +31,31 @@ suspend fun main() = with(Storage) {
 val storage = KValueStorage(0)
 val launchesCount by storage
 
-suspend fun main() {
-    storage.awaitLoading()
-    println("${++launchesCount}")
-    storage.awaitLastCommit()
+...
+println("${++launchesCount}")
+...
+```
+
+### Edge cases
+Because this framework is fully asynchronous, when using javascript, you should make `Storage.awaitLoading()` before usage. <br>
+
+This also the reason why you should do `Storage.awaitLastCommit()` if your app doesn't run infinitely (like bots, android apps, etc). Any variable change leads to creating coroutine that writing file (it is implemented safely), and when you stop the app, you should await it.
+
+So, the full example is:
+```kotlin
+suspend fun main() = with(Storage) {
+    awaitLoading()
+    foo = 0
+    awaitLastCommit()
 }
 ```
+But in many apps it may be omitted. In non-js targets, you can omit `awaitLoading()`, in apps with any kind of lifecycle or that just infinitely running you can omit `awaitLastCommit()`.
+
 
 #### More about load/save awaiting: [#1](https://github.com/y9san9/kds/issues/1)
 
-## Installaton
-`$version` - library version, can be found in bintray badge
+## Installation
+`$version` - library version, can be found in releases
 
 ### Groovy Gradle
 ```gradle

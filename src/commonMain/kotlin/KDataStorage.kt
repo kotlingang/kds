@@ -52,10 +52,13 @@ open class KDataStorage(
     }
 
     // Store for encoded values
-    private var dataSource: MutableMap<String, JsonElement>? = null
+    private val dataSource: Deferred<MutableMap<String, JsonElement>> = async {
+        json.decodeFromString(string = baseStorage.loadStorage() ?: "{}")
+    }
+
     // When get, try to await it blocking or error 
-    internal val data get() = runBlockingPlatform { awaitLoading() }.let { (setup) ->
-        dataSource ?: if(setup) {
+    internal val data get() = runBlockingPlatform { dataSource.await() }.let { (setup, value) ->
+        value ?: if(setup) {
             error("Internal error, because storage is not loaded. " +
                     "You shouldn't see this error, please create an issue. " +
                     "To fix it try awaitLoading before using storage")
@@ -111,13 +114,10 @@ open class KDataStorage(
     fun <T> property(serializer: KSerializer<T?>) = property(serializer, default = null)
     inline fun <reified T> property() = property<T?>(json.serializersModule.serializer())
 
-    private val loadingJob = launch {
-        dataSource = json.decodeFromString(baseStorage.loadStorage() ?: "{}")
-    }
     /**
      * Await first loading; Should be done before storage usage
      */
-    suspend fun awaitLoading() = loadingJob.join()
+    suspend fun awaitLoading() = dataSource.await().unit
 
     /**
      *  Call it if mutable data was changed to commit data async

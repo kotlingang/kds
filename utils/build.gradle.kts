@@ -2,21 +2,14 @@
 
 
 plugins {
-    kotlin("multiplatform")
-    `maven-publish`
+    kotlin(plugin.multiplatformn)
 }
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-    }
-    js(IR) {
+    js {
         useCommonJs()
         browser()
         nodejs()
@@ -34,24 +27,9 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val jvmMain by getting {
-            dependencies {
-
-            }
-        }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-
             }
         }
 
