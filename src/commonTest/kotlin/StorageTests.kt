@@ -1,61 +1,49 @@
-package com.kotlingang.kds
-
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
+import `fun`.kotlingang.kds.KDataStorage
+import `fun`.kotlingang.kds.commitMutate
+import `fun`.kotlingang.kds.mutate
+import `fun`.kotlingang.kds.runTestBlocking
+import kotlinx.coroutines.*
 import kotlin.random.Random
 import kotlin.test.Test
 
 
-@Serializable
-class MassiveTestClass
-
-object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ path("...") })
-    var random by property { Random.nextLong() }
-
-    val random2Delegate = property { Random.nextInt() }
-    var random2 by random2Delegate
-
-    var launchesCount by property(0)
-    var list by property(listOf<String>())
-    val mutableList by property(mutableListOf<String>())
-    var massiveTestProp by property {
-        MassiveTestClass()
-    }
-}
-
-
+@DelicateCoroutinesApi
 class StorageTests {
+    object Storage : KDataStorage(name = "Storage") {  // or KDataStorage("name") or KDataStorage({ path("...") })
+        var random by property { Random.nextLong() }
+
+        val random2Delegate = property { Random.nextInt() }
+        var random2 by random2Delegate
+
+        var launchesCount by property(0)
+        var list by property(mutableListOf<String>())
+        val mutableList by property(mutableListOf<String>())
+    }
+
     @Test
     fun simpleStorageTest() = GlobalScope.runTestBlocking {
-        with(Storage) {
-            println("Awaiting loading")
-            awaitLoading()
+        println("Awaiting loading")
+        Storage.commitMutate {
             println("Awaited loading")
 
             println("Launches count: ${++launchesCount}")
             println("Random value: $random")
+            list += "Element"
+            println("List saved")
 
-            val myList = list.toMutableList()
-            println("My list set")
-            myList.add("Element")
-            list = myList
-            println("My list saved")
-
-            println("List: $myList")
-
-            awaitLastCommit()
+            println("List: $list")
         }
     }
+
     @Test
     fun mutableStorageTest() = GlobalScope.runTestBlocking {
         with(Storage) {
             awaitLoading()  // for JS
             mutableList += "Test"
-            commit()
+            launchCommit()
         }
     }
+
     @Test
     fun clearTest() = GlobalScope.runTestBlocking {
         with(Storage) {

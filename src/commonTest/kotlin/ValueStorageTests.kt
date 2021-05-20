@@ -1,19 +1,19 @@
-package com.kotlingang.kds
-
-
-import com.kotlingang.kds.wrapper.KValueStorage
+import `fun`.kotlingang.kds.value.KValueStorage
+import `fun`.kotlingang.kds.runTestBlocking
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlin.test.Test
 
 
-val valueStorage = KValueStorage(0)
-var launchNumber by valueStorage
-
+@DelicateCoroutinesApi
 class ValueStorageTests {
     @Test
     fun simpleValueStorageTest() = GlobalScope.runTestBlocking {
+        val valueStorage = KValueStorage(default = 0, coroutineScope = this)
+        var launchNumber by valueStorage
+
+        // Required for JS targets
         valueStorage.awaitLoading()
         println(++launchNumber)
-        valueStorage.awaitLastCommit()
     }
 }

@@ -1,5 +1,4 @@
 @file:Suppress("UNUSED_VARIABLE")
-import `fun`.kotlingang.deploy.DeployEntity
 
 plugins {
     kotlin(plugin.multiplatform)
@@ -11,7 +10,10 @@ version = AppInfo.VERSION
 
 repositories {
     mavenCentral()
+    // Required for nodejs bindings. Waiting for deploy to mavenCentral()
+    @kotlin.Suppress("DEPRECATION") jcenter()
 }
+
 kotlin {
     val jsType = Attribute.of("jsType", String::class.java)
     js("browser") {
@@ -23,6 +25,7 @@ kotlin {
         useCommonJs()
         nodejs()
     }
+    jvm()
 
     // native targets are not implemented; if you need it, create an issue
     
@@ -43,6 +46,21 @@ kotlin {
         val nodeMain by getting {
             dependencies {
                 implementation(nodejsExternals)
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+            }
+        }
+        val browserTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
+            }
+        }
+        val nodeTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
             }
         }
 
