@@ -1,5 +1,5 @@
 object AppInfo {
-    const val PACKAGE = "com.kotlingang.kds"
+    const val PACKAGE = "fun.kotlingang.kds"
     const val VERSION = "2.5"
     const val ARTIFACT_ID = "kds"
     const val NAME = "Kotlin Data Storage"

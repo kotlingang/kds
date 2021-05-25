@@ -1,4 +1,4 @@
-[![Last Version](https://badge.kotlingang.fun/maven/com/kotlingang/kds/kds/)](https://maven.kotlingang.fun/com/kotlingang/kds/kds)
+[![Last Version](https://badge.kotlingang.fun/maven/fun/kotlingang/kds/kds/)](https://maven.kotlingang.fun/fun/kotlingang/kds/kds)
 [![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/y9san9/kds)
 
 # kds
