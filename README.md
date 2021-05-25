@@ -80,3 +80,4 @@ dependencies {
     implementation("fun.kotlingang.kds:kds:$version")
 }
 ```
+> For nodejs use `fun.kotlingang.kds:kds-node:$version` dependency

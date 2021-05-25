@@ -16,7 +16,7 @@ repositories {
 
 kotlin {
     val jsType = Attribute.of("jsType", String::class.java)
-    js("browser", IR) {
+    js(IR) {
         attributes.attribute(jsType, "browser")
         browser()
     }
@@ -53,7 +53,7 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
-        val browserTest by getting {
+        val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
@@ -72,11 +72,7 @@ kotlin {
 
 val root = project
 allprojects {
+    applyDeploy()
     group = root.group
     version = root.version
 }
-
-/**
- * Enables deploy for `:` if `deploy.properties` exists.
- */
-project.applyDeploy()

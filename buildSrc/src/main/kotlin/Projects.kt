@@ -14,7 +14,7 @@ import java.io.File
  * password (user's password), destination (destination folder path on remote server).
  */
 fun Project.applyDeploy() {
-    val deployPropertiesFile: File = project.file("deploy.properties")
+    val deployPropertiesFile: File = rootProject.file("deploy.properties")
 
     if (deployPropertiesFile.exists()) {
         val properties = loadProperties(deployPropertiesFile)
@@ -29,7 +29,7 @@ fun Project.applyDeploy() {
 
         project.configure<DeployEntity> {
             group = AppInfo.PACKAGE
-            artifactId = AppInfo.ARTIFACT_ID
+            artifactId = project.name
             version = AppInfo.VERSION
             name = AppInfo.NAME
             description = AppInfo.DESCRIPTION
