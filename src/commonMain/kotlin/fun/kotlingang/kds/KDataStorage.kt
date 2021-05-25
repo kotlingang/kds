@@ -61,13 +61,16 @@ open class KDataStorage (
     }
 
     // Store for encoded values
-    private val dataSource: Deferred<MutableMap<String, JsonElement>> = scope.async {
-        json.decodeFromString(string = baseStorage.loadStorage() ?: "{}")
+    // Mutable value required in Javascript, so there is no way to run await blocking
+    private var dataSource: MutableMap<String, JsonElement>? = null
+
+    private val dataLoadingJob = scope.launch {
+        dataSource = json.decodeFromString(string = baseStorage.loadStorage() ?: "{}")
     }
 
     // When get, try to await it blocking or error 
-    internal val data get() = runBlockingPlatform { dataSource.await() }.let { (setup, value) ->
-        value ?: if(setup) {
+    internal val data get() = dataSource ?: runBlockingPlatform { dataLoadingJob.join() }.let { (setup, _) ->
+        dataSource ?: if(setup) {
             error("Internal error, because storage is not loaded. " +
                     "You shouldn't see this error, please create an issue. " +
                     "To fix it try awaitLoading before using storage")
@@ -124,7 +127,7 @@ open class KDataStorage (
     /**
      * Await first loading; Should be done before fun.kotlingang.kds.storage usage
      */
-    suspend fun awaitLoading() = dataSource.await().unit
+    suspend fun awaitLoading() = dataLoadingJob.join()
 
     /**
      *  Call it if mutable data was changed to commit data async
