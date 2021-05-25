@@ -16,11 +16,11 @@ repositories {
 
 kotlin {
     val jsType = Attribute.of("jsType", String::class.java)
-    js("browser") {
+    js("browser", IR) {
         attributes.attribute(jsType, "browser")
         browser()
     }
-    js("node") {
+    js("node", IR) {
         attributes.attribute(jsType, "node")
         useCommonJs()
         nodejs()

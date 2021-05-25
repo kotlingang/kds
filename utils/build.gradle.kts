@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
 }
 kotlin {
-    js {
+    js(IR) {
         useCommonJs()
         browser()
         nodejs()
