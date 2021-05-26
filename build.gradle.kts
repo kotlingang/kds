@@ -32,33 +32,53 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(utils)
                 implementation(coroutines)
                 api(serialization)
             }
         }
+
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val nodeMain by getting {
-            dependencies {
-                implementation(nodejsExternals)
-            }
+
+        val filesTarget by creating {
+            dependsOn(commonMain)
+        }
+
+        val jvmMain by getting {
+            dependsOn(filesTarget)
         }
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
             }
         }
-        val jsTest by getting {
+
+        val commonJsMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val nodeMain by getting {
+            dependsOn(filesTarget)
+            dependsOn(commonJsMain)
+
+            dependencies {
+                implementation(nodejsExternals)
+            }
+        }
+        val nodeTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }
         }
-        val nodeTest by getting {
+
+        val jsMain by getting {
+            dependsOn(commonJsMain)
+        }
+        val jsTest by getting {
             dependencies {
                 implementation(kotlin("test-js"))
             }

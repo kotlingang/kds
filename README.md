@@ -13,49 +13,23 @@ We really want someone to use our library, ask us about any questions and give s
 
 ### Storage
 ```kotlin
-object Storage : KDataStorage() {  // or KDataStorage("name") or KDataStorage({ path("...") })
-    var launchesCount by property(0)
-    var list by property(mutableListOf<String>())
-}
+val storage = KFileDataStorage(name = "data.json")
+// Or
+val storage = KFileDataStorage(absolutePath = "...")
+
+var launchesCount by storage.property { 0 }
+var list by storage.property { mutableListOf<String>() }
 
 
-suspend fun main() = Storage.commitMutate { 
+fun main() = storage.mutateBlocking { 
     list += "Element"
     launchesCount++
 }
 ```
 
-### Value Storage
-```kotlin
-val storage = KValueStorage(0)
-val launchesCount by storage
+There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
 
-suspend fun main() = storage.commitMutate {
-    println("${++launchesCount}")
-}
-```
-
-## Non-coroutines way
-There is also a way for changing the storage without suspend context in infinitely-running apps:
-```kotlin
-class KindaActivity : CoroutineScope by ... {
-    // Scope is still optional
-    object Storage : KDataStorage(scope = this) {  // or KDataStorage("name") or KDataStorage({ path("...") })
-        var launchesCount by property(0)
-        var list by property(mutableListOf<String>())
-    }
-    
-    fun onCreate() = with(Storage) {
-        // Commit launches automatically since there is delegate call
-        launchesCount++
-        
-        // However, list is a mutable object, so explicit mutation declaration required
-        mutate {
-            list += "Element"
-        }
-    }
-}
-```
+Library may be fully customized since you can implement your own [DataManager](src/commonMain/kotlin/fun/kotlingang/kds/manager/DataManager.kt)
 
 ## Installation
 `$version` - library version, can be found in badge above
@@ -68,7 +42,7 @@ repositories {
     }
 }
 dependencies {
-    implementation "fun.kotlingang.kds:kds:$version"
+    implementation "fun.kotlingang.kds:kds-{platformSuffix}:$version"
 }
 ```
 ### Kotlin Gradle Dsl
@@ -77,7 +51,7 @@ repositories {
     maven("https://maven.kotlingang.fun/")
 }
 dependencies {
-    implementation("fun.kotlingang.kds:kds:$version")
+    implementation("fun.kotlingang.kds:kds-{platformSuffix}:$version")
 }
 ```
-> For nodejs use `fun.kotlingang.kds:kds-node:$version` dependency
+> `platformSuffix` (js, jvm, etc) is suffix required when you using the library not from common code, for nodejs use `node` suffix.
