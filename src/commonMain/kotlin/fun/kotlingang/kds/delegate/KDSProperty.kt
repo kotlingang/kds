@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 
 
 @Suppress("unused")
-fun <T> KBlockingDataStorage.property(default: () -> T, serializer: KSerializer<T>) =
+fun <T> KBlockingDataStorage.property(serializer: KSerializer<T>, default: () -> T) =
     KDSPropertyProvider(storage = this, serializer, default)
 
 inline fun <reified T> KBlockingDataStorage.property(noinline default: () -> T) =
