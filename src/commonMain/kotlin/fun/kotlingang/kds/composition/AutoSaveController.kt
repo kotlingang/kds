@@ -11,7 +11,7 @@ class AutoSaveController internal constructor() {
 
     val autoSave get() = turnOffRequests == 0
 
-    fun turnOff() = platformSynchronized(lock = this) { turnOffRequests.inc() }
+    fun turnOff() = platformSynchronized(lock = this) { turnOffRequests++ }
     fun turnOn() { turnOffRequests = 0 }
-    fun tryTurnOn() = platformSynchronized(lock = this) { turnOffRequests.dec() }
+    fun tryTurnOn() = platformSynchronized(lock = this) { turnOffRequests-- }
 }
