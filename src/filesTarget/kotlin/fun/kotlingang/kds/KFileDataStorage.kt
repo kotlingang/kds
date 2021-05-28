@@ -2,7 +2,7 @@
 
 package `fun`.kotlingang.kds
 
-import `fun`.kotlingang.kds.files.File
+import `fun`.kotlingang.kds.files.CommonFileInterface
 import `fun`.kotlingang.kds.files.Files
 import `fun`.kotlingang.kds.manager.FileDataManager
 import kotlinx.coroutines.*
@@ -17,7 +17,7 @@ fun KFileDataStorage (
     scope: CoroutineScope = GlobalScope + SupervisorJob() + CoroutineName("KDS Coroutine")
 ): KFileDataStorage = KFileDataStorage (
     json, scope,
-    FileDataManager(File(absolutePath))
+    FileDataManager(CommonFileInterface(absolutePath))
 )
 
 fun KFileDataStorage (

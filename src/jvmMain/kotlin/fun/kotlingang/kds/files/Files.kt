@@ -4,11 +4,11 @@ import java.io.File as JavaFile
 
 
 actual object Files {
-    actual val homeDir = File(System.getProperty("user.dir"))
+    actual val homeDir = CommonFileInterface(System.getProperty("user.dir"))
 }
 
 
-actual class File actual constructor(actual val path: String) {
-    private val selfPath = path
-    actual fun join(path: String) = File(JavaFile(selfPath, path).absolutePath)
+actual class CommonFileInterface actual constructor(actual val absolutePath: String) {
+    private val selfPath = absolutePath
+    actual fun join(path: String) = CommonFileInterface(JavaFile(selfPath, path).absolutePath)
 }

@@ -2,10 +2,10 @@ package `fun`.kotlingang.kds.files
 
 
 expect object Files {
-    val homeDir: File
+    val homeDir: CommonFileInterface
 }
 
-expect class File(path: String) {
-    val path: String
-    fun join(path: String): File
+expect class CommonFileInterface(absolutePath: String) {
+    val absolutePath: String
+    fun join(path: String): CommonFileInterface
 }

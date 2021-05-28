@@ -1,30 +1,32 @@
 package `fun`.kotlingang.kds.manager
 
-import `fun`.kotlingang.kds.files.File
+import `fun`.kotlingang.kds.files.CommonFileInterface
 import kotlinx.coroutines.*
-import java.io.File as JavaFile
+import java.io.File
 
 
-internal actual class FileDataManager actual constructor(file: File) : AsyncDataManager {
-    private val javaFile = JavaFile(file.path)
+internal actual class FileDataManager (
+    private val file: File
+) : AsyncDataManager {
+    actual constructor(file: CommonFileInterface) : this(File(file.absolutePath))
 
     init {
-        if(!javaFile.exists()) {
-            javaFile.parentFile?.mkdirs()
-            javaFile.createNewFile()
-            javaFile.writeText(text = "{}")
+        if(!file.exists()) {
+            file.parentFile?.mkdirs()
+            file.createNewFile()
+            file.writeText(text = "{}")
         }
     }
 
-    override fun loadDataBlocking() = javaFile.readText()
-    override fun saveDataBlocking(text: String) = javaFile.writeText(text)
+    override fun loadDataBlocking() = file.readText()
+    override fun saveDataBlocking(text: String) = file.writeText(text)
 
     private val bufferSize = DEFAULT_BUFFER_SIZE
 
     override suspend fun loadData(): String = withContext(Dispatchers.IO) {
         buildString {
             val buffer = CharArray(bufferSize)
-            javaFile.bufferedReader(bufferSize = bufferSize).use { reader ->
+            file.bufferedReader(bufferSize = bufferSize).use { reader ->
                 @Suppress("BlockingMethodInNonBlockingContext")
                 while(true) {
                     val readCount = reader.read(buffer).takeIf { it >= 0 } ?: return@use
@@ -35,11 +37,14 @@ internal actual class FileDataManager actual constructor(file: File) : AsyncData
         }
     }
 
+    /**
+     * The file may not be fully written, so use cancellation only if you are sure that will be OK
+     */
     override suspend fun saveData(text: String) = withContext(Dispatchers.IO) {
-        javaFile.bufferedWriter(bufferSize = bufferSize).use { writer ->
+        file.bufferedWriter(bufferSize = bufferSize).use { writer ->
             text.chunked(size = bufferSize).forEach { text ->
-                writer.write(text)
                 yield()
+                writer.write(text)
             }
         }
     }

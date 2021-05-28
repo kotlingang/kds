@@ -5,9 +5,9 @@ import path.path as pathModule
 
 
 actual object Files {
-    actual val homeDir: File = File(process.cwd())
+    actual val homeDir: CommonFileInterface = CommonFileInterface(process.cwd())
 }
 
-actual class File actual constructor(actual val path: String) {
-    actual fun join(path: String) = File(pathModule.join(path))
+actual class CommonFileInterface actual constructor(actual val absolutePath: String) {
+    actual fun join(path: String) = CommonFileInterface(pathModule.join(path))
 }

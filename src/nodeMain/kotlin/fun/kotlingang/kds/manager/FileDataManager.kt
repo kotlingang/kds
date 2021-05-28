@@ -1,6 +1,6 @@
 package `fun`.kotlingang.kds.manager
 
-import `fun`.kotlingang.kds.files.File
+import `fun`.kotlingang.kds.files.CommonFileInterface
 import fs.MakeDirectoryOptions
 import kotlinx.coroutines.CompletableDeferred
 import path.path
@@ -10,12 +10,12 @@ private val fs = js("require('fs')")
 private val pathModule = path
 
 internal actual class FileDataManager actual constructor (
-    file: File
+    file: CommonFileInterface
 ) : AsyncDataManager {
 
     init {
         if(!fs.existsSync(path) as Boolean) {
-            val parent = pathModule.resolve(file.path, "..")
+            val parent = pathModule.resolve(file.absolutePath, "..")
             val options = object : MakeDirectoryOptions {
                 override var recursive: Boolean? = true
             }
