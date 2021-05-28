@@ -33,7 +33,7 @@ fun main() = storage.mutateBlocking {
 
 There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
 
-Library may be fully customized since you can implement your own [DataManager](core/src/commonMain/kotlin/fun/kotlingang/kds/manager/DataManager.kt)
+Library may be fully customized since you can implement your own [DataManager](core/src/commonMain/kotlin/fun/kotlingang/kds/data_manager)
 
 ## Implementation
 > When targeting JS, only IR is supported
