@@ -42,7 +42,7 @@ repositories {
     }
 }
 dependencies {
-    implementation "fun.kotlingang.kds:kds-{platformSuffix}:$version"
+    implementation "fun.kotlingang.kds:kds:$version"
 }
 ```
 ### Kotlin Gradle Dsl
@@ -51,7 +51,7 @@ repositories {
     maven("https://maven.kotlingang.fun/")
 }
 dependencies {
-    implementation("fun.kotlingang.kds:kds-{platformSuffix}:$version")
+    implementation("fun.kotlingang.kds:kds:$version")
 }
 ```
-> `platformSuffix` (js, jvm, etc) is suffix required when you using the library not from common code, for nodejs use `node` suffix.
+> Note: for nodejs you should use `kds-node` artifact
