@@ -13,9 +13,13 @@ We really want someone to use our library, ask us about any questions and give s
 
 ### Storage
 ```kotlin
-val storage = KFileDataStorage(name = "data.json")
-// Or
+// Jvm / Nodejs
+val storage = KFileDataStorage(name = "data.json")  // Created in ${workingDir}/data/name.json
 val storage = KFileDataStorage(absolutePath = "...")
+// Jvm
+val storage = KFileDataStorage(file = [dataFile])
+// Browser Js
+val storage = KLocalDataStorage(key = "data")
 
 var launchesCount by storage.property { 0 }
 var list by storage.property { mutableListOf<String>() }
