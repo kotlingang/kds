@@ -6,5 +6,5 @@ import kotlinx.serialization.json.Json
 
 
 typealias KLocalDataStorage = KBlockingDataStorage
-fun KLocalDataStorage(json: Json = Json, key: String = "data"): KLocalDataStorage =
+fun KLocalDataStorage(key: String = "data", json: Json = Json): KLocalDataStorage =
     KBlockingDataStorage(json, LocalStorageDataManager(key))
