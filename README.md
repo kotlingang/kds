@@ -38,7 +38,7 @@ Library may be fully customized since you can implement your own [DataManager](c
 ## Implementation
 `$version` - library version, can be found in badge above
 
-All `kds` packages are located at repository [maven.kotlingang.fun](https://maven.kotlingang.fun) so make sure you include one.
+All `kds` packages are located at repository [maven.kotlingang.fun](https://maven.kotlingang.fun/fun/kotlingang/kds) so make sure you include one.
 
 ### KFileDataStorage
 KDataStorage async/sync [implementation](files) with files.
