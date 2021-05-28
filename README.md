@@ -37,18 +37,20 @@ Library may be fully customized since you can implement your own [DataManager](c
 
 ## Implementation
 > When targeting JS, only IR is supported
-> 
+
 `$version` - library version, can be found in badge above <br>
 
 All `kds` packages are located at repository [maven.kotlingang.fun](https://maven.kotlingang.fun/fun/kotlingang/kds) so make sure you include one.
 
 ### KFileDataStorage
-KDataStorage async/sync [implementation](files) with files. <br>
+> KDataStorage async/sync [implementation](files) with files.
+
 **Platforms**: Jvm / NodeJS <br>
 **Dependency**: `fun.kotlingang.kds:files:$version`
 
 ### KLocalDataStorage
-KDataStorage sync [implementation](local-storage) with browser `localStorage` <br>
+> KDataStorage sync [implementation](local-storage) with browser `localStorage`
+
 **Platforms**: Browser JS <br>
 **Dependency**: `fun.kotlingang.kds:local-storage:$version`
 
