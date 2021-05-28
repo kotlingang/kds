@@ -1,4 +1,4 @@
-[![Last Version](https://badge.kotlingang.fun/maven/fun/kotlingang/kds/kds/)](https://maven.kotlingang.fun/fun/kotlingang/kds/kds)
+[![Last Version](https://badge.kotlingang.fun/maven/fun/kotlingang/kds/core/)](https://maven.kotlingang.fun/fun/kotlingang/kds/kds)
 [![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/y9san9/kds)
 
 # kds
@@ -33,29 +33,31 @@ fun main() = storage.mutateBlocking {
 
 There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
 
-Library may be fully customized since you can implement your own [DataManager](src/commonMain/kotlin/fun/kotlingang/kds/manager/DataManager.kt)
+Library may be fully customized since you can implement your own [DataManager](core/src/commonMain/kotlin/fun/kotlingang/kds/manager/DataManager.kt)
 
-## Installation
+## Implementation
 `$version` - library version, can be found in badge above
 
-### Groovy Gradle
-```gradle
-repositories {
-    maven {
-        url 'https://maven.kotlingang.fun/'
-    }
-}
-dependencies {
-    implementation "fun.kotlingang.kds:kds:$version"
-}
-```
-### Kotlin Gradle Dsl
-```gradle
-repositories {
-    maven("https://maven.kotlingang.fun/")
-}
-dependencies {
-    implementation("fun.kotlingang.kds:kds:$version")
-}
-```
-> Note: for nodejs you should use `kds-node` artifact
+All `kds` packages are located at repository [maven.kotlingang.fun](https://maven.kotlingang.fun) so make sure you include one.
+
+### KFileDataStorage
+KDataStorage async/sync [implementation](files) with files.
+
+**Platforms**: Jvm / NodeJS <br>
+**Dependency**: `fun.kotlingang.kds:files:$version`
+
+### KLocalDataStorage
+KDataStorage sync [implementation](local-storage) with browser `localStorage`
+
+**Platforms**: Browser JS <br>
+**Dependency**: `fun.kotlingang.kds:local-storage:$version`
+
+### Custom
+There **are** plans for other implementations (shared-preferences, ns-user-default, etc.), but if you want to create your own implementation, use following dependency
+
+`// You can provide more platforms with PR/Issue` <br>
+**Platforms**: Jvm / NodeJS / BrowserJS <br>
+**Dependency**: `fun.kotlingang.kds:core:$version`
+
+## Plans
+Now the library primarily depends on JSON, it means that there is only ability to define custom `save(data)`, `load(): String` methods, but it would be nice to make more expressive `DataManager`, so I could integrate with Exposed (any kinds of Tables) and JSON could be just special case for KDS
