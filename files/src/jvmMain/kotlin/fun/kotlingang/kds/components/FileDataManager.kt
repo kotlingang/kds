@@ -1,5 +1,6 @@
-package `fun`.kotlingang.kds.manager
+package `fun`.kotlingang.kds.components
 
+import `fun`.kotlingang.kds.data_manager.AsyncContentDataManager
 import `fun`.kotlingang.kds.files.CommonFileInterface
 import kotlinx.coroutines.*
 import java.io.File
@@ -7,7 +8,7 @@ import java.io.File
 
 internal actual class FileDataManager (
     private val file: File
-) : AsyncDataManager {
+) : AsyncContentDataManager {
     actual constructor(file: CommonFileInterface) : this(File(file.absolutePath))
 
     init {

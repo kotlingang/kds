@@ -1,5 +1,6 @@
-package `fun`.kotlingang.kds.manager
+package `fun`.kotlingang.kds.components
 
+import `fun`.kotlingang.kds.data_manager.AsyncContentDataManager
 import `fun`.kotlingang.kds.files.CommonFileInterface
 import fs.MakeDirectoryOptions
 import kotlinx.coroutines.CompletableDeferred
@@ -11,7 +12,7 @@ private val pathModule = path
 
 internal actual class FileDataManager actual constructor (
     file: CommonFileInterface
-) : AsyncDataManager {
+) : AsyncContentDataManager {
 
     init {
         if(!fs.existsSync(path) as Boolean) {

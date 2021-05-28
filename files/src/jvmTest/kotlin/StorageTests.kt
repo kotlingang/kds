@@ -1,5 +1,4 @@
 import `fun`.kotlingang.kds.KFileDataStorage
-import `fun`.kotlingang.kds.delegate.KDSDelegate
 import `fun`.kotlingang.kds.delegate.property
 import `fun`.kotlingang.kds.mutate.mutate
 import `fun`.kotlingang.kds.mutate.mutateCommit
@@ -15,9 +14,9 @@ val storage = KFileDataStorage(name = "data")
 val randomDelegate = storage.property { Random.nextLong() }
 var random by randomDelegate
 
-var KFileDataStorage.random2 by KDSDelegate { Random.nextInt() }
+var random2 by storage.property { Random.nextInt() }
 
-var KFileDataStorage.launchesCount by KDSDelegate(serializer = Int.serializer()) { 0 }
+var launchesCount by storage.property(serializer = Int.serializer()) { 0 }
 
 var list by storage.property { mutableListOf<String>() }
 val mutableList by storage.property { mutableListOf<String>() }

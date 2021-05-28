@@ -3,7 +3,7 @@
 
 package `fun`.kotlingang.kds
 
-import `fun`.kotlingang.kds.manager.FileDataManager
+import `fun`.kotlingang.kds.components.FileDataManager
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import java.io.File

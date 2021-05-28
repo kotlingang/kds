@@ -1,4 +1,4 @@
-package `fun`.kotlingang.kds.composition
+package `fun`.kotlingang.kds.components
 
 import `fun`.kotlingang.kds.sync.platformSynchronized
 

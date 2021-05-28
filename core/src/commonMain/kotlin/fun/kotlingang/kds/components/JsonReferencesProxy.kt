@@ -1,10 +1,9 @@
-package `fun`.kotlingang.kds.composition
+package `fun`.kotlingang.kds.components
 
 import `fun`.kotlingang.kds.sync.platformSynchronized
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.serializer
 
 
 /**

@@ -3,10 +3,10 @@
 package `fun`.kotlingang.kds
 
 import `fun`.kotlingang.kds.annotation.DelicateKDSApi
-import `fun`.kotlingang.kds.composition.AutoSaveController
-import `fun`.kotlingang.kds.composition.JsonReferencesProxy
+import `fun`.kotlingang.kds.components.AutoSaveController
+import `fun`.kotlingang.kds.components.JsonReferencesProxy
 import `fun`.kotlingang.kds.extensions.any.unit
-import `fun`.kotlingang.kds.manager.BlockingDataManager
+import `fun`.kotlingang.kds.data_manager.BlockingContentDataManager
 import `fun`.kotlingang.kds.mutate.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
@@ -14,25 +14,15 @@ import kotlinx.serialization.json.JsonElement
 
 
 open class KBlockingDataStorage (
-    val json: Json = Json,
-    private val manager: BlockingDataManager
+    val json: Json,
+    private val manager: BlockingContentDataManager
 ) {
     @DelicateKDSApi
     val autoSaveController = AutoSaveController()
     @OptIn(DelicateKDSApi::class)
     val autoSave by autoSaveController::autoSave
 
-    /**
-     * [mutate], [mutateBlocking], [mutateCommit] should be used instead
-     */
-    @DelicateKDSApi
-    inline fun withoutSave(crossinline block: () -> Unit) {
-        autoSaveController.turnOff()
-        block()
-        autoSaveController.tryTurnOn()
-    }
-
-    protected open fun getOrLoadData() = manager.loadDataBlocking().parseData().toMutableMap()
+    protected open fun getOrLoadData() = manager.loadDataBlocking().parseData()
 
     private val dataProxy by lazy {
         JsonReferencesProxy(json, getOrLoadData())

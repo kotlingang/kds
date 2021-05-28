@@ -9,24 +9,14 @@ import kotlin.reflect.KProperty
 
 @Suppress("unused")
 fun <T> KBlockingDataStorage.property(serializer: KSerializer<T>, default: () -> T) =
-    KDSPropertyProvider(storage = this, serializer, default)
+    KDSProperty(storage = this, serializer, default)
 
 inline fun <reified T> KBlockingDataStorage.property(noinline default: () -> T) =
-    KDSPropertyProvider(storage = this, json.serializersModule.serializer(), default)
-
-class KDSPropertyProvider<T> (
-    private val storage: KBlockingDataStorage,
-    private val serializer: KSerializer<T>,
-    private val default: () -> T
-) {
-    operator fun provideDelegate(thisRef: Any?, property: KProperty<*>) =
-        KDSProperty(storage, property.name, serializer, default)
-}
+    KDSProperty(storage = this, json.serializersModule.serializer(), default)
 
 @OptIn(DelicateKDSApi::class)
 class KDSProperty<T> (
     private val storage: KBlockingDataStorage,
-    private val name: String,
     private val serializer: KSerializer<T>,
     private val default: () -> T
 ) {
@@ -35,6 +25,4 @@ class KDSProperty<T> (
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>) =
         storage.get(name = property.name, serializer, default)
-
-    fun clear() = storage.clear(name)
 }
