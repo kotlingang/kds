@@ -3,7 +3,7 @@ plugins {
 }
 
 kotlin {
-    js(BOTH) {
+    js(IR) {
         browser()
         useCommonJs()
     }

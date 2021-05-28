@@ -36,19 +36,19 @@ There are both blocking and asynchronous implementations (except JS-browser wher
 Library may be fully customized since you can implement your own [DataManager](core/src/commonMain/kotlin/fun/kotlingang/kds/manager/DataManager.kt)
 
 ## Implementation
-`$version` - library version, can be found in badge above
+> When targeting JS, only IR is supported
+> 
+`$version` - library version, can be found in badge above <br>
 
 All `kds` packages are located at repository [maven.kotlingang.fun](https://maven.kotlingang.fun/fun/kotlingang/kds) so make sure you include one.
 
 ### KFileDataStorage
-KDataStorage async/sync [implementation](files) with files.
-
+KDataStorage async/sync [implementation](files) with files. <br>
 **Platforms**: Jvm / NodeJS <br>
 **Dependency**: `fun.kotlingang.kds:files:$version`
 
 ### KLocalDataStorage
-KDataStorage sync [implementation](local-storage) with browser `localStorage`
-
+KDataStorage sync [implementation](local-storage) with browser `localStorage` <br>
 **Platforms**: Browser JS <br>
 **Dependency**: `fun.kotlingang.kds:local-storage:$version`
 

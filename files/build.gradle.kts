@@ -6,7 +6,7 @@ plugins {
 
 kotlin {
     jvm()
-    js(BOTH) {
+    js(IR) {
         nodejs()
         useCommonJs()
     }
