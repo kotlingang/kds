@@ -3,20 +3,23 @@
 package `fun`.kotlingang.kds
 
 import `fun`.kotlingang.kds.annotation.DelicateKDSApi
+import `fun`.kotlingang.kds.annotation.UnsafeKType
 import `fun`.kotlingang.kds.components.AutoSaveController
 import `fun`.kotlingang.kds.components.JsonReferencesProxy
 import `fun`.kotlingang.kds.extensions.any.unit
-import `fun`.kotlingang.kds.data_manager.BlockingContentDataManager
-import `fun`.kotlingang.kds.mutate.*
+import `fun`.kotlingang.kds.manager.ContentDataManager
+import `fun`.kotlingang.kds.storage.KTypeDataStorage
+import `fun`.kotlingang.kds.storage.SerializableDataStorage
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlin.reflect.KType
 
 
-open class KBlockingDataStorage (
+open class KJsonBlockingDataStorage (
     val json: Json,
-    private val manager: BlockingContentDataManager
-) {
+    private val manager: ContentDataManager
+): SerializableDataStorage, KTypeDataStorage {
     @DelicateKDSApi
     val autoSaveController = AutoSaveController()
     @OptIn(DelicateKDSApi::class)
@@ -39,22 +42,25 @@ open class KBlockingDataStorage (
     fun applyMutations() = dataProxy.applyMutations()
 
     @DelicateKDSApi
-    fun <T> set(name: String, serializer: KSerializer<T>, value: T) {
-        dataProxy.set(name, serializer, value)
+    override fun <T> putSerializable(key: String, serializer: KSerializer<T>, value: T) {
+        dataProxy.set(key, serializer, value)
         performAutoSave()
     }
 
     @DelicateKDSApi
-    inline fun <reified T> set(name: String, value: @Serializable T) =
-        set(name, json.serializersModule.serializer(), value)
+    @OptIn(DelicateKDSApi::class, UnsafeKType::class)
+    override fun putWithKType(key: String, type: KType, value: Any?) =
+        putSerializable(key, json.serializersModule.serializer(type), value)
 
     @DelicateKDSApi
-    fun <T> get(name: String, serializer: KSerializer<T>, default: () -> T) =
-        dataProxy.get(name, serializer, default)
+    override fun <T> getSerializable(key: String, serializer: KSerializer<T>, default: () -> T) =
+        dataProxy.get(key, serializer, default)
 
+    @UnsafeKType
+    @Suppress("UNCHECKED_CAST")
     @DelicateKDSApi
-    inline fun <reified T> get(name: String, noinline default: () -> T) =
-        get(name, json.serializersModule.serializer(), default)
+    override fun <T> getWithKType(key: String, type: KType, default: () -> T): T =
+        getSerializable(key, json.serializersModule.serializer(type) as KSerializer<T>, default)
 
     fun exists(name: String) = dataProxy.exists(name)
 
@@ -71,8 +77,8 @@ open class KBlockingDataStorage (
     fun commitBlocking() = manager.saveDataBlocking(data.encodeData())
 
     /**
-     * For [KBlockingDataStorage] auto save way is blocking way while
-     * for [KAsyncDataStorage] auto save way is async way
+     * For [KJsonBlockingDataStorage] auto save way is blocking way while
+     * for [KJsonAsyncDataStorage] auto save way is async way
      */
     protected open fun performAutoSave() {
         if(autoSave)

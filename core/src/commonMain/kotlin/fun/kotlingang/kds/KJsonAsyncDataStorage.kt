@@ -3,7 +3,7 @@
 package `fun`.kotlingang.kds
 
 import `fun`.kotlingang.kds.components.AsyncCommitPerformer
-import `fun`.kotlingang.kds.data_manager.AsyncContentDataManager
+import `fun`.kotlingang.kds.manager.AsyncContentDataManager
 import `fun`.kotlingang.kds.sync.platformSynchronized
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -12,11 +12,11 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 
 
-class KAsyncDataStorage @OptIn(DelicateCoroutinesApi::class) constructor (
+class KJsonAsyncDataStorage @OptIn(DelicateCoroutinesApi::class) constructor (
     json: Json = Json,
     scope: CoroutineScope = GlobalScope + SupervisorJob() + CoroutineName("KDS Coroutine"),
     private val manager: AsyncContentDataManager
-) : KBlockingDataStorage(json, manager) {
+) : KJsonBlockingDataStorage(json, manager) {
     private var asyncData: Map<String, JsonElement>? = null
 
     override fun getOrLoadData() = platformSynchronized(lock = this) {

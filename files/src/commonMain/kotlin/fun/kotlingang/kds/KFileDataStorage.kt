@@ -9,7 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 
 
-typealias KFileDataStorage = KAsyncDataStorage
+typealias KFileDataStorage = KJsonAsyncDataStorage
 
 fun KFileDataStorage (
     absolutePath: String,

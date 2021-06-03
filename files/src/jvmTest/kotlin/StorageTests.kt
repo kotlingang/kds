@@ -16,7 +16,7 @@ var random by randomDelegate
 
 var random2 by storage.property { Random.nextInt() }
 
-var launchesCount by storage.property(serializer = Int.serializer()) { 0 }
+var launchesCount by storage.property { 0 }
 
 var list by storage.property { mutableListOf<String>() }
 val mutableList by storage.property { mutableListOf<String>() }

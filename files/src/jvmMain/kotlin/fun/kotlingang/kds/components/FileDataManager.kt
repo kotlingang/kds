@@ -1,6 +1,6 @@
 package `fun`.kotlingang.kds.components
 
-import `fun`.kotlingang.kds.data_manager.AsyncContentDataManager
+import `fun`.kotlingang.kds.manager.AsyncContentDataManager
 import `fun`.kotlingang.kds.files.CommonFileInterface
 import kotlinx.coroutines.*
 import java.io.File

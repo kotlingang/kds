@@ -4,6 +4,6 @@ import `fun`.kotlingang.kds.components.LocalStorageDataManager
 import kotlinx.serialization.json.Json
 
 
-typealias KLocalDataStorage = KBlockingDataStorage
-fun KLocalDataStorage(key: String = "data", json: Json = Json): KLocalDataStorage =
-    KBlockingDataStorage(json, LocalStorageDataManager(key))
+typealias KLocalDataStorage = KJsonPropertyDataStorage
+fun KLocalDataStorage(json: Json = Json): KLocalDataStorage =
+    KJsonPropertyDataStorage(json, LocalStorageDataManager)
