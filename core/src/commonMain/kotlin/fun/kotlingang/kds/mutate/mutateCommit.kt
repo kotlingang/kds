@@ -1,12 +1,10 @@
 package `fun`.kotlingang.kds.mutate
 
-import `fun`.kotlingang.kds.KJsonAsyncDataStorage
 import `fun`.kotlingang.kds.annotation.DelicateKDSApi
+import `fun`.kotlingang.kds.storage.AsyncCommittableStorage
 
 
-@OptIn(DelicateKDSApi::class)
-suspend inline fun KJsonAsyncDataStorage.mutateCommit(crossinline block: () -> Unit) {
-    withoutSave(block)
-    applyMutations()
+suspend inline fun AsyncCommittableStorage.mutateCommit(crossinline block: () -> Unit) {
+    block()
     commit()
 }

@@ -1,7 +1,9 @@
 package `fun`.kotlingang.kds.storage
 
 import `fun`.kotlingang.kds.annotation.DelicateKDSApi
+import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.annotation.UnsafeKType
+import `fun`.kotlingang.kds.value.Optional
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -10,23 +12,24 @@ interface KTypeDataStorage {
     /**
      * May be you would use inline [putWithKType]?
      */
+    @RawSetterGetter
     @UnsafeKType
     fun putWithKType(key: String, type: KType, value: Any?)
 
     /**
-     * May be you would use inline []
+     * May be you would use inline [getWithKType]?
      */
+    @RawSetterGetter
     @UnsafeKType
-    fun <T> getWithKType(key: String, type: KType, default: () -> T): T
+    fun <T> getWithKType(key: String, type: KType): Optional<T>
 }
 
-
-@DelicateKDSApi
+@RawSetterGetter
 @OptIn(ExperimentalStdlibApi::class, UnsafeKType::class)
 inline fun <reified T> KTypeDataStorage.putWithKType(key: String, value: T) =
     putWithKType(key, typeOf<T>(), value)
 
-@DelicateKDSApi
+@RawSetterGetter
 @OptIn(ExperimentalStdlibApi::class, UnsafeKType::class)
-inline fun <reified T> KTypeDataStorage.getWithKType(key: String, noinline default: () -> T) =
-    getWithKType(key, typeOf<T>(), default)
+inline fun <reified T> KTypeDataStorage.getWithKType(key: String): Optional<T> =
+    getWithKType(key, typeOf<T>())

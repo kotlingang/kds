@@ -1,12 +1,9 @@
 package `fun`.kotlingang.kds.mutate
 
-import `fun`.kotlingang.kds.KJsonBlockingDataStorage
-import `fun`.kotlingang.kds.annotation.DelicateKDSApi
+import `fun`.kotlingang.kds.storage.CommittableStorage
 
 
-@OptIn(DelicateKDSApi::class)
-inline fun KJsonBlockingDataStorage.mutateBlocking(crossinline block: () -> Unit) {
-    withoutSave(block)
-    applyMutations()
+inline fun CommittableStorage.mutateBlocking(crossinline block: () -> Unit) {
+    block()
     commitBlocking()
 }

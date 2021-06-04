@@ -9,12 +9,14 @@ Kotlin Data Storage is a multiplatform coroutine-based kotlin library for saving
 The library is not stable at the moment, that doesn't mean that it may crash, but does mean that any API may be changed. For now only contributors use this library in production (testing on real projects on Kotlin-JVM(2), Kotlin-JS(1), Kotlin-NODEJS(1) targets), if you want to use it more than playground, contact with us ([Alex](https://t.me/y9san9), [Neon](https://t.me/y9neon)) to let us know that we shouldn't make breaking changes and move the library into stable state. We also be glad if you share you vision of what the project structure and APIs should be. <br>
 We really want someone to use our library, ask us about any questions and give suggestions.
 
+**Stability**: _PROTOTYPE_
+
 ## Example
 
 ### Storage
 ```kotlin
 // Jvm / Nodejs
-val storage = KFileDataStorage(name = "data.json")  // Created in ${workingDir}/data/name.json
+val storage = KFileDataStorage.ofName(name = "data.json")  // Created in ${workingDir}/data/name.json
 val storage = KFileDataStorage(absolutePath = "...")
 // Jvm
 val storage = KFileDataStorage(file = [dataFile])
@@ -33,7 +35,7 @@ fun main() = storage.mutateBlocking {
 
 There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
 
-Library may be fully customized since you can implement your own [DataManager](core/src/commonMain/kotlin/fun/kotlingang/kds/data_manager)
+Library is fully customizable, I will add the tutorial later
 
 ## Implementation
 > When targeting JS, only IR is supported

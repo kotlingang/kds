@@ -5,11 +5,15 @@
 /core/build/
 /files/build/
 /local-storage/build/
+/json/build/
+/json/json-files/build/
+/json/json-local-storage/build/
 
 /.gradle/
 /buildSrc/.gradle/
 
 /data/
+/json/json-files/data/
 
 /local.properties
 /deploy.properties
