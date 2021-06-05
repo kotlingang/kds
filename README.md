@@ -60,7 +60,7 @@ fun addItem() = MainStorage.mutate {
     items += Item(...)
 }
 // Suspends until commit
-fun addItem() = MainStorage.mutateCommit {
+suspend fun addItem() = MainStorage.mutateCommit {
     items += Item(...)
 }
 // Blocking mutation
@@ -68,7 +68,7 @@ fun addItem() = MainStorage.mutateBlocking {
     items += Item(...)
 }
 
-fun main() {
+suspend fun main() {
     // Launches commit and cancels previous one
     MainStorage.launchCommit()
     // Suspends until commit
