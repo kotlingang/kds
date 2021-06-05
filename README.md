@@ -44,6 +44,40 @@ fun main() {
 }
 ```
 
+### Mutate Example
+There is also an API to use mutable objects
+```kotlin
+data class Item (
+    ...
+)
+
+object MainStorage : ... {
+    val items by property { mutableListOf<Item>() }
+}
+
+// Launches asynchronous commit after block()
+fun addItem() = MainStorage.mutate {
+    items += Item(...)
+}
+// Suspends until commit
+fun addItem() = MainStorage.mutateCommit {
+    items += Item(...)
+}
+// Blocking mutation
+fun addItem() = MainStorage.mutateBlocking {
+    items += Item(...)
+}
+
+fun main() {
+    // Launches commit and cancels previous one
+    MainStorage.launchCommit()
+    // Suspends until commit
+    MainStorage.commit()
+    // Blocking commit
+    MainStorage.commitBlocking()
+}
+```
+
 There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
 
 Note that the library written in a way where you may **fully** customize it (add xml format for files/etc, implement java.Serializable support and so on, interfaces are common, so you may still use delegates, commits, mutations on it)
