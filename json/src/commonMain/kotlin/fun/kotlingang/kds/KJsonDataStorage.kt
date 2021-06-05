@@ -4,8 +4,8 @@ import `fun`.kotlingang.kds.annotation.DelicateKDSApi
 import `fun`.kotlingang.kds.annotation.InternalKDSApi
 import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.annotation.UnsafeKType
+import `fun`.kotlingang.kds.storage.JsonElementDataStorage
 import `fun`.kotlingang.kds.storage.SerializableDataStorage
-import `fun`.kotlingang.kds.storage.StringDataStorage
 import `fun`.kotlingang.kds.sync.platformSynchronized
 import `fun`.kotlingang.kds.value.Optional
 import kotlinx.serialization.KSerializer
@@ -15,9 +15,9 @@ import kotlin.reflect.KType
 
 
 open class KJsonDataStorage (
-    override val json: Json,
-    private val storage: StringDataStorage
-) : SerializableDataStorage, StringDataStorage by storage {
+    final override val json: Json,
+    private val storage: JsonElementDataStorage
+) : SerializableDataStorage {
 
     /**
      * Any mutation/iteration/etc should be wrapped with synchronization
@@ -36,15 +36,15 @@ open class KJsonDataStorage (
 
     @Suppress("UNCHECKED_CAST")
     private fun <T> encodeUnchecked(serializer: KSerializer<T>, value: Any?) =
-        json.encodeToString(serializer, value as T)
+        json.encodeToJsonElement(serializer, value as T)
 
     @OptIn(DelicateKDSApi::class, InternalKDSApi::class)
     @RawSetterGetter
     final override fun <T> putSerializable(key: String, serializer: KSerializer<T>, value: T) {
-        val string = json.encodeToString(serializer, value)
+        val element = json.encodeToJsonElement(serializer, value)
         platformSynchronized(lock = this) {
             references[key] = serializer to value
-            storage.putString(key, string)
+            storage.putJsonElement(key, element)
         }
     }
 
@@ -57,8 +57,8 @@ open class KJsonDataStorage (
                 if(references.containsKey(key)) {
                     references[key]?.second as T
                 } else {
-                    json.decodeFromString (
-                        serializer, string = storage.getString(key)
+                    json.decodeFromJsonElement (
+                        serializer, element = storage.getJsonElement(key)
                             ?: return@result Optional.NotPresent
                     ).also { value ->
                         references[key] = serializer to value

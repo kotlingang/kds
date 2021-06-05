@@ -1,6 +1,7 @@
 import `fun`.kotlingang.kds.KFileDataStorage
 import `fun`.kotlingang.kds.delegate.property
 import `fun`.kotlingang.kds.mutate.mutate
+import `fun`.kotlingang.kds.mutate.mutateBlocking
 import `fun`.kotlingang.kds.mutate.mutateCommit
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -8,29 +9,29 @@ import org.junit.Test
 import kotlin.random.Random
 
 
-val storage = KFileDataStorage()
+object Storage : KFileDataStorage() {
+    private val randomDelegate = property { Random.nextLong() }
+    var random by randomDelegate
 
-val randomDelegate = storage.property { Random.nextLong() }
-var random by randomDelegate
+    var random2 by property { Random.nextInt() }
 
-var random2 by storage.property { Random.nextInt() }
+    var launchesCount by property { 0 }
 
-var launchesCount by storage.property { 0 }
-
-var list by storage.property { mutableListOf<String>() }
-val mutableList by storage.property { mutableListOf<String>() }
+    var list by property { mutableListOf<String>() }
+    val mutableList by property { mutableListOf<String>() }
+}
 
 
 @DelicateCoroutinesApi
 class StorageTests {
     @Test
     fun simpleStorageTest() = runBlocking {
-        with(storage) {
-            println("Awaiting loading")
-            storage.setupBlocking()
-            storage.setup()
-            println("Awaited loading")
+        println("Awaiting loading")
+        Storage.setupBlocking()
+        Storage.setup()
+        println("Awaited loading")
 
+        Storage.mutate {
             println("Launches count: ${++launchesCount}")
             println("Random value: $random2")
 
@@ -41,16 +42,13 @@ class StorageTests {
             }
 
             println("List: $list")
-            storage.commit()
         }
+
+        Storage.commit()
     }
 
     @Test
-    fun mutableStorageTest() = runBlocking {
-        with(storage) {
-            mutateCommit {
-                mutableList += "Test"
-            }
-        }
+    fun mutableStorageTest() = Storage.mutateBlocking {
+        mutableList += "Test"
     }
 }

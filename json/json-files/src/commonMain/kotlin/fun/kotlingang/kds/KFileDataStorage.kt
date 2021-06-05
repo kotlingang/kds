@@ -11,16 +11,16 @@ import kotlinx.serialization.json.Json
 
 
 @OptIn(DelicateCoroutinesApi::class, InternalKDSApi::class)
-class KFileDataStorage private constructor (
+open class KFileDataStorage private constructor (
     json: Json,
-    private val storage: KFileStringDataStorage
+    private val storage: JsonElementFileDataStorage
 ) : KJsonDataStorage(json, storage), AsyncCommittableStorage {
 
     internal constructor (
         file: CommonFile,
         json: Json,
         scope: CoroutineScope
-    ) : this(json, KFileStringDataStorage(file, scope, JsonDataTransformer(json)))
+    ) : this(json, JsonElementFileDataStorage(json, file, scope))
 
     constructor (
         absolutePath: String,
@@ -47,32 +47,28 @@ class KFileDataStorage private constructor (
         )
     }
 
-    override suspend fun setup() = storage.setup()
-    override fun setupBlocking() = storage.setupBlocking()
+    final override suspend fun setup() = storage.setup()
+    final override fun setupBlocking() = storage.setupBlocking()
 
     @OptIn(RawSetterGetter::class, DelicateKDSApi::class)
-    private fun applyMutations() = encodeReferences().forEach { (k, v) ->
-        storage.putString(k, v)
+    private fun applyMutations() = platformSynchronized(lock = this)  {
+        encodeReferences().forEach { (k, v) ->
+            storage.putJsonElement(k, v)
+        }
     }
 
-    override fun launchCommit() {
-        platformSynchronized(lock = this) {
-            applyMutations()
-        }
+    final override fun launchCommit() {
+        applyMutations()
         storage.launchCommit()
     }
 
-    override suspend fun commit() {
-        platformSynchronized(lock = this) {
-            applyMutations()
-        }
+    final override suspend fun commit() {
+        applyMutations()
         storage.commit()
     }
 
-    override fun commitBlocking() {
-        platformSynchronized(lock = this) {
-            applyMutations()
-        }
+    final override fun commitBlocking() {
+        applyMutations()
         storage.commitBlocking()
     }
 }

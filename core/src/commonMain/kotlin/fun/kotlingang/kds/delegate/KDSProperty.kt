@@ -9,6 +9,8 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 
+inline fun <reified T> KTypeDataStorage.property() = property<T?> { null }
+
 @OptIn(ExperimentalStdlibApi::class, UnsafeKType::class)
 inline fun <reified T> KTypeDataStorage.property(noinline default: () -> T) =
     KDSProperty(storage = this, typeOf<T>(), default)

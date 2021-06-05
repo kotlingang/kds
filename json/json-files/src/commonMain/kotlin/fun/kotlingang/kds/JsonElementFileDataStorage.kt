@@ -1,26 +1,25 @@
-@file:OptIn(DelicateCoroutinesApi::class)
-
 package `fun`.kotlingang.kds
 
 import `fun`.kotlingang.kds.annotation.InternalKDSApi
 import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.file.CommonFile
 import `fun`.kotlingang.kds.storage.AsyncCommittableStorage
-import `fun`.kotlingang.kds.storage.CommittableStorage
-import `fun`.kotlingang.kds.storage.StringDataStorage
+import `fun`.kotlingang.kds.storage.JsonElementDataStorage
 import `fun`.kotlingang.kds.sync.platformSynchronized
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 
 
-@OptIn(InternalKDSApi::class)
-class KFileStringDataStorage (
+internal class JsonElementFileDataStorage (
+    private val json: Json,
     private val file: CommonFile,
-    private val scope: CoroutineScope,
-    private val dataTransformer: DataTransformer
-) : StringDataStorage, AsyncCommittableStorage {
-
+    private val scope: CoroutineScope
+) : JsonElementDataStorage, AsyncCommittableStorage {
     init {
         if(!file.exists) {
             file.parentFile?.mkdir(recursive = true)
@@ -37,19 +36,16 @@ class KFileStringDataStorage (
         } else {
             file.readTextBlocking()
         }
-        dataTransformer.decode(text).toMutableMap()
+        json.decodeFromString<Map<String, JsonElement>>(text).toMutableMap()
     }
 
-    @RawSetterGetter
-    override fun putString(key: String, value: String) {
-        platformSynchronized(lock = this) {
-            data[key] = value
-        }
+    @OptIn(RawSetterGetter::class)
+    override fun putJsonElement(key: String, value: JsonElement) {
+        data[key] = value
     }
 
-    @RawSetterGetter
-    override fun getString(key: String): String? =
-        platformSynchronized(lock = this) { data[key] }
+    @OptIn(RawSetterGetter::class)
+    override fun getJsonElement(key: String): JsonElement? = data[key]
 
     override fun setupBlocking() {
         // Lazy invocation
@@ -60,7 +56,8 @@ class KFileStringDataStorage (
         asyncData.await()
     }
 
-    private fun encodeData() = dataTransformer.encode (
+    @OptIn(InternalKDSApi::class)
+    private fun encodeData() = json.encodeToString (
         platformSynchronized(lock = this) { data.toMap() }
     )
 
