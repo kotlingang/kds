@@ -11,5 +11,4 @@ kotlin {
 
 dependencies {
     api(core)
-    implementation(serialization)
 }

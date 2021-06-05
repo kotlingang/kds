@@ -1,5 +1,7 @@
 package `fun`.kotlingang.kds.sync
 
+import `fun`.kotlingang.kds.annotation.InternalKDSApi
 
-@PublishedApi
-internal expect inline fun <R> platformSynchronized(lock: Any, block: () -> R): R
+
+@InternalKDSApi
+expect inline fun <R> platformSynchronized(lock: Any, crossinline block: () -> R): R
