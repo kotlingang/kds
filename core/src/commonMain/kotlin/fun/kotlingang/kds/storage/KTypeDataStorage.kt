@@ -1,9 +1,8 @@
 package `fun`.kotlingang.kds.storage
 
-import `fun`.kotlingang.kds.annotation.DelicateKDSApi
 import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.annotation.UnsafeKType
-import `fun`.kotlingang.kds.value.Optional
+import `fun`.kotlingang.kds.optional.Optional
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 

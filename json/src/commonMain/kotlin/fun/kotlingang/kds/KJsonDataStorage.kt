@@ -7,7 +7,7 @@ import `fun`.kotlingang.kds.annotation.UnsafeKType
 import `fun`.kotlingang.kds.storage.JsonElementDataStorage
 import `fun`.kotlingang.kds.storage.SerializableDataStorage
 import `fun`.kotlingang.kds.sync.platformSynchronized
-import `fun`.kotlingang.kds.value.Optional
+import `fun`.kotlingang.kds.optional.Optional
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer

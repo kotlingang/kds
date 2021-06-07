@@ -3,7 +3,7 @@ package `fun`.kotlingang.kds.delegate
 import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.annotation.UnsafeKType
 import `fun`.kotlingang.kds.storage.KTypeDataStorage
-import `fun`.kotlingang.kds.value.getOrDefault
+import `fun`.kotlingang.kds.optional.getOrDefault
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
