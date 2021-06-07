@@ -13,19 +13,11 @@ import kotlin.reflect.typeOf
 @ExperimentalKDSApi
 @OptIn(ExperimentalStdlibApi::class, UnsafeKType::class)
 public inline fun <reified T> KTypeDataStorage.storageList (
-    list: MutableList<T>
+    crossinline default: () -> MutableList<T> = { mutableListOf() }
 ): DelegateProvider<Any?, KDSProperty<MutableList<T>>> =
     DelegateProvider { _, property ->
         property {
-            StorageList(property.name, storage = this, list, typeOf<MutableList<T>>())
+            StorageList(property.name, storage = this, default(), typeOf<MutableList<T>>())
         }
     }
-
-/**
- * @see [StorageList]
- */
-@ExperimentalKDSApi
-public inline fun <reified T> KTypeDataStorage.storageList (
-    vararg elements: T
-): DelegateProvider<Any?, KDSProperty<MutableList<T>>> = storageList(mutableListOf(*elements))
 

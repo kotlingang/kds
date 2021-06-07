@@ -6,6 +6,7 @@ import `fun`.kotlingang.kds.annotation.ExperimentalKDSApi
 import `fun`.kotlingang.kds.delegate.property
 import `fun`.kotlingang.kds.delegate.storageList
 import `fun`.kotlingang.kds.delegate.storageMap
+import `fun`.kotlingang.kds.delegate.storageSet
 import `fun`.kotlingang.kds.mutate.mutate
 import `fun`.kotlingang.kds.mutate.mutateBlocking
 import `fun`.kotlingang.kds.mutate.mutateCommit
@@ -19,6 +20,7 @@ import kotlin.random.Random
 object Storage : KFileDataStorage() {
     val map by storageMap<String, Int>()
     val list by storageList<String>()
+    val set by storageSet<Int>()
 
     private val randomDelegate = property { Random.nextLong() }
     var random by randomDelegate
@@ -58,5 +60,6 @@ class StorageTests {
     fun storageListMapTest() = Storage.mutateBlocking {
         list += "A"
         map.compute("launches") { _, v -> (v ?: 0) + 1 }
+        set += Random.nextInt()
     }
 }

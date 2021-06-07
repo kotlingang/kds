@@ -13,18 +13,10 @@ import kotlin.reflect.typeOf
 @ExperimentalKDSApi
 @OptIn(ExperimentalStdlibApi::class, UnsafeKType::class)
 public inline fun <reified K, reified V> KTypeDataStorage.storageMap (
-    map: MutableMap<K, V>
+    crossinline default: () -> MutableMap<K, V> = { mutableMapOf() }
 ): DelegateProvider<Any?, KDSProperty<MutableMap<K, V>>> =
     DelegateProvider { _, property ->
         property {
-            StorageMap(property.name, storage = this, map, typeOf<MutableMap<K, V>>())
+            StorageMap(property.name, storage = this, default(), typeOf<MutableMap<K, V>>())
         }
     }
-
-/**
- * @see [StorageMap]
- */
-@ExperimentalKDSApi
-public inline fun <reified K, reified V> KTypeDataStorage.storageMap (
-    vararg pairs: Pair<K, V>
-): DelegateProvider<Any?, KDSProperty<MutableMap<K, V>>> = storageMap(mutableMapOf(*pairs))
