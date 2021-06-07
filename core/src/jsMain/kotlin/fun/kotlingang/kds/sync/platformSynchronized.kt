@@ -4,4 +4,4 @@ import `fun`.kotlingang.kds.annotation.InternalKDSApi
 
 
 @InternalKDSApi
-actual inline fun <R> platformSynchronized(lock: Any, crossinline block: () -> R) = block()
+public actual inline fun <R> platformSynchronized(lock: Any, crossinline block: () -> R): R = block()

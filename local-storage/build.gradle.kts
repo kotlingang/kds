@@ -3,6 +3,8 @@ plugins {
 }
 
 kotlin {
+    explicitApi()
+
     js(IR) {
         browser()
         useCommonJs()

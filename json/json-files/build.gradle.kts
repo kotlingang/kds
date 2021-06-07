@@ -1,8 +1,12 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin(plugin.multiplatform)
 }
 
 kotlin {
+    explicitApi()
+
     jvm()
     js(IR) {
         nodejs()

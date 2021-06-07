@@ -1,9 +1,11 @@
 package `fun`.kotlingang.kds.storage
 
 
-interface AsyncCommittableStorage : CommittableStorage {
-    suspend fun setup()
+public interface AsyncCommittableStorage : CommittableStorage {
+    override fun commitBlocking()
+    public suspend fun setup()
 
-    fun launchCommit()
-    suspend fun commit()
+    override fun setupBlocking()
+    public fun launchCommit()
+    public suspend fun commit()
 }

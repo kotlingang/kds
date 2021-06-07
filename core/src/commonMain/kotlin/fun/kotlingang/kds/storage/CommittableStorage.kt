@@ -1,8 +1,8 @@
 package `fun`.kotlingang.kds.storage
 
 
-interface CommittableStorage {
-    fun setupBlocking() {}
+public interface CommittableStorage {
+    public fun setupBlocking() {}
 
-    fun commitBlocking()
+    public fun commitBlocking()
 }

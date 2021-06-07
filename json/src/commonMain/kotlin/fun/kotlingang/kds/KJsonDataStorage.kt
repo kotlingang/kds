@@ -7,14 +7,15 @@ import `fun`.kotlingang.kds.annotation.UnsafeKType
 import `fun`.kotlingang.kds.storage.JsonElementDataStorage
 import `fun`.kotlingang.kds.storage.SerializableDataStorage
 import `fun`.kotlingang.kds.sync.platformSynchronized
-import `fun`.kotlingang.kds.value.Optional
+import `fun`.kotlingang.kds.optional.Optional
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 
 
-open class KJsonDataStorage (
+public open class KJsonDataStorage (
     final override val json: Json,
     private val storage: JsonElementDataStorage
 ) : SerializableDataStorage {
@@ -23,11 +24,11 @@ open class KJsonDataStorage (
      * Any mutation/iteration/etc should be wrapped with synchronization
      */
     @DelicateKDSApi
-    protected val references = mutableMapOf<String, Pair<KSerializer<*>, Any?>>()
+    protected val references: MutableMap<String, Pair<KSerializer<*>, Any?>> = mutableMapOf()
 
     @DelicateKDSApi
     @OptIn(InternalKDSApi::class)
-    protected fun encodeReferences() = platformSynchronized(lock = this) {
+    protected fun encodeReferences(): Map<String, JsonElement> = platformSynchronized(lock = this) {
         references.mapValues { (_, v) ->
             val (serializer, value) = v
             encodeUnchecked(serializer, value)
@@ -69,7 +70,7 @@ open class KJsonDataStorage (
 
     @RawSetterGetter
     @UnsafeKType
-    final override fun putWithKType(key: String, type: KType, value: Any?) =
+    final override fun putWithKType(key: String, type: KType, value: Any?): Unit =
         putSerializable(key, json.serializersModule.serializer(type), value)
 
     @Suppress("UNCHECKED_CAST")

@@ -9,4 +9,4 @@ package `fun`.kotlingang.kds.annotation
     """,
     level = RequiresOptIn.Level.WARNING
 )
-annotation class RawSetterGetter
+public annotation class RawSetterGetter

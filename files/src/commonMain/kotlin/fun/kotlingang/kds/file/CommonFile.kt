@@ -1,24 +1,24 @@
 package `fun`.kotlingang.kds.file
 
 
-expect class CommonFile(absolutePath: String) {
-    val absolutePath: String
+public expect class CommonFile(absolutePath: String) {
+    public val absolutePath: String
 
-    val exists: Boolean
-    val parentFile: CommonFile?
+    public val exists: Boolean
+    public val parentFile: CommonFile?
 
-    fun join(path: String): CommonFile
+    public fun join(path: String): CommonFile
 
-    fun mkdir(recursive: Boolean = false)
-    fun createNewFile(defaultText: String = "")
+    public fun mkdir(recursive: Boolean = false)
+    public fun createNewFile(defaultText: String = "")
 
-    fun writeTextBlocking(text: String)
-    suspend fun writeText(text: String)
+    public fun writeTextBlocking(text: String)
+    public suspend fun writeText(text: String)
 
-    fun readTextBlocking(): String
-    suspend fun readText(): String
+    public fun readTextBlocking(): String
+    public suspend fun readText(): String
 
-    companion object {
-        val HOME_DIR: CommonFile
+    public companion object {
+        public val HOME_DIR: CommonFile
     }
 }

@@ -11,7 +11,7 @@ import kotlinx.serialization.json.Json
 
 
 @OptIn(DelicateCoroutinesApi::class, InternalKDSApi::class)
-open class KFileDataStorage private constructor (
+public open class KFileDataStorage private constructor (
     json: Json,
     private val storage: JsonElementFileDataStorage
 ) : KJsonDataStorage(json, storage), AsyncCommittableStorage {
@@ -22,13 +22,13 @@ open class KFileDataStorage private constructor (
         scope: CoroutineScope
     ) : this(json, JsonElementFileDataStorage(json, file, scope))
 
-    constructor (
+    public constructor (
         absolutePath: String,
         json: Json = Json,
         scope: CoroutineScope = GlobalScope + SupervisorJob()
     ) : this(CommonFile(absolutePath), json, scope)
 
-    constructor (
+    public constructor (
         json: Json = Json,
         scope: CoroutineScope = GlobalScope + SupervisorJob()
     ) : this (
@@ -36,19 +36,19 @@ open class KFileDataStorage private constructor (
         json, scope
     )
 
-    companion object {
-        fun ofName (
+    public companion object {
+        public fun ofName (
             name: String,
             json: Json = Json,
             scope: CoroutineScope = GlobalScope + SupervisorJob()
-        ) = KFileDataStorage (
+        ): KFileDataStorage = KFileDataStorage (
             CommonFile.HOME_DIR.join(path = "data").join(path = "$name.json"),
             json, scope
         )
     }
 
-    final override suspend fun setup() = storage.setup()
-    final override fun setupBlocking() = storage.setupBlocking()
+    final override suspend fun setup(): Unit = storage.setup()
+    final override fun setupBlocking(): Unit = storage.setupBlocking()
 
     @OptIn(RawSetterGetter::class, DelicateKDSApi::class)
     private fun applyMutations() = platformSynchronized(lock = this)  {

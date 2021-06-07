@@ -7,7 +7,7 @@ import java.io.File
 
 
 @OptIn(DelicateCoroutinesApi::class)
-fun KFileDataStorage (
+public fun KFileDataStorage (
     file: File,
     json: Json = Json,
     scope: CoroutineScope = GlobalScope + SupervisorJob()

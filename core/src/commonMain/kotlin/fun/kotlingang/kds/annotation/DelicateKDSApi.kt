@@ -7,4 +7,4 @@ package `fun`.kotlingang.kds.annotation
         In most cases it shouldn't be used by end users
     """
 )
-annotation class DelicateKDSApi
+public annotation class DelicateKDSApi
