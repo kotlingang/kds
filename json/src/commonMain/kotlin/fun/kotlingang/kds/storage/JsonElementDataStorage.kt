@@ -4,10 +4,10 @@ import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import kotlinx.serialization.json.JsonElement
 
 
-interface JsonElementDataStorage {
+public interface JsonElementDataStorage {
     @RawSetterGetter
-    fun putJsonElement(key: String, value: JsonElement)
+    public fun putJsonElement(key: String, value: JsonElement)
 
     @RawSetterGetter
-    fun getJsonElement(key: String): JsonElement?
+    public fun getJsonElement(key: String): JsonElement?
 }

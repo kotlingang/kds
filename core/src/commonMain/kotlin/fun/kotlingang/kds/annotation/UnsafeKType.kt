@@ -9,4 +9,4 @@ package `fun`.kotlingang.kds.annotation
     level = RequiresOptIn.Level.WARNING
 )
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CONSTRUCTOR)
-annotation class UnsafeKType
+public annotation class UnsafeKType

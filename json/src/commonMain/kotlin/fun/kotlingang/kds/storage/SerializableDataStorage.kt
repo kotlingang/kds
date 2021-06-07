@@ -6,12 +6,12 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
 
-interface SerializableDataStorage : KTypeDataStorage {
-    val json: Json
+public interface SerializableDataStorage : KTypeDataStorage {
+    public val json: Json
 
     @RawSetterGetter
-    fun <T> putSerializable(key: String, serializer: KSerializer<T>, value: T)
+    public fun <T> putSerializable(key: String, serializer: KSerializer<T>, value: T)
 
     @RawSetterGetter
-    fun <T> getSerializable(key: String, serializer: KSerializer<T>): Optional<T>
+    public fun <T> getSerializable(key: String, serializer: KSerializer<T>): Optional<T>
 }

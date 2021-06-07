@@ -6,31 +6,31 @@ import kotlinx.coroutines.yield
 import java.io.File
 
 
-actual class CommonFile(private val file: File) {
-    actual constructor(absolutePath: String) : this(File(absolutePath))
+public actual class CommonFile(private val file: File) {
+    public actual constructor(absolutePath: String) : this(File(absolutePath))
 
-    actual val absolutePath: String = file.absolutePath
+    public actual val absolutePath: String = file.absolutePath
 
-    actual fun join(path: String) = CommonFile(File(file, path))
-    actual val exists get() = file.exists()
-    actual val parentFile get() = file.parentFile?.let(::CommonFile)
+    public actual fun join(path: String): CommonFile = CommonFile(File(file, path))
+    public actual val exists: Boolean get() = file.exists()
+    public actual val parentFile: CommonFile? get() = file.parentFile?.let(::CommonFile)
 
-    actual fun mkdir(recursive: Boolean) {
+    public actual fun mkdir(recursive: Boolean) {
         when(recursive) {
             true -> file.mkdirs()
             false -> file.mkdir()
         }
     }
-    actual fun createNewFile(defaultText: String) {
+    public actual fun createNewFile(defaultText: String) {
         file.createNewFile()
         file.writeText(defaultText)
     }
 
     private val bufferSize = DEFAULT_BUFFER_SIZE
 
-    actual fun writeTextBlocking(text: String) = file.writeText(text)
+    public actual fun writeTextBlocking(text: String): Unit = file.writeText(text)
 
-    actual suspend fun writeText(text: String) = withContext(Dispatchers.IO) {
+    public actual suspend fun writeText(text: String): Unit = withContext(Dispatchers.IO) {
         file.bufferedWriter(bufferSize = bufferSize).use { writer ->
             text.chunked(size = bufferSize).forEach { text ->
                 yield()
@@ -39,9 +39,9 @@ actual class CommonFile(private val file: File) {
         }
     }
 
-    actual fun readTextBlocking(): String = file.readText()
+    public actual fun readTextBlocking(): String = file.readText()
 
-    actual suspend fun readText(): String = withContext(Dispatchers.IO) {
+    public actual suspend fun readText(): String = withContext(Dispatchers.IO) {
         buildString {
             val buffer = CharArray(bufferSize)
             file.bufferedReader(bufferSize = bufferSize).use { reader ->
@@ -55,7 +55,7 @@ actual class CommonFile(private val file: File) {
         }
     }
 
-    actual companion object {
-        actual val HOME_DIR = CommonFile(System.getProperty("user.dir"))
+    public actual companion object {
+        public actual val HOME_DIR: CommonFile = CommonFile(System.getProperty("user.dir"))
     }
 }
