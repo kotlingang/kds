@@ -125,7 +125,7 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 ### KSharedDataStorage
 > KDataStorage async [implementation](json/json-shared-preferences) with android `SharedPreferences`
 
-**Platforms**: ![android][badge-android]
+**Platforms**: ![android][badge-android] <br>
 **Dependency**: `fun.kotlingang.kds:json-shared-preferences:$version`
 
 ### Custom
