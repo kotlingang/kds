@@ -25,9 +25,9 @@ public open class KSharedDataStorage internal constructor (
         }
 
     // SharedPreferences.apply method is async
-    override suspend fun commit(): Unit = commitBlocking()
+    final override suspend fun commit(): Unit = commitBlocking()
     // SharedPreferences.apply method launches async saving
-    override fun launchCommit(): Unit = commitBlocking()
+    final override fun launchCommit(): Unit = commitBlocking()
 
     final override fun setupBlocking() {}
     final override suspend fun setup() {}
