@@ -15,15 +15,17 @@ We are experimental, which means API breaking changes may be performed in minor 
 
 ### Files Storage
 ```kotlin
+import ProgramData.userName
+
 object ProgramData : KFileDataStorage() {
-    val userName by property<String>()
+    val userName by property<String>()  // shortcut for property<String?> { null }
 }
 
 fun main() {
-    if(ProgramData.userName == null) {
+    if(userName == null) {
         println("Hi dear user, how should I call you?")
         userName = readLine() ?: "Anonymous"
-        println("Okay $userName, see you")
+        println("Okay ${userName}, see you")
     } else {
         println("Glad to see you again, $userName")
     }
@@ -45,33 +47,50 @@ fun main() {
 There is also an API to use mutable objects
 ```kotlin
 data class Item (
-    ...
+    var foo: Foo? = null
 )
 
 object MainStorage : ... {
-    val items by property { mutableListOf<Item>() }
+    val item by property(::Item)
 }
 
-// Launches asynchronous commit after block()
+// Launches an asynchronous commit after block()
 fun addItem() = MainStorage.mutate {
-    items += Item(...)
+    item.foo = ...
 }
 // Suspends until commit
 suspend fun addItem() = MainStorage.mutateCommit {
-    items += Item(...)
+    item.foo = ...
 }
 // Blocking mutation
 fun addItem() = MainStorage.mutateBlocking {
-    items += Item(...)
+    item.foo = ...
 }
 
 suspend fun main() {
-    // Launches commit and cancels previous one
+    // Launches a commit and cancels the previous one
     MainStorage.launchCommit()
     // Suspends until commit
     MainStorage.commit()
     // Blocking commit
     MainStorage.commitBlocking()
+}
+```
+
+### Mutate Entities
+There are some (experimental for now) entities which may automatically perform save operation on mutate:
+```kotlin
+object MainStorage : ... {
+    val list by storageList<Boolean>()
+    val map by storageMap<String, Int>()
+    val set by storageSet { mutableSetOf(1, 2, 3) }
+}
+
+fun main() {
+    // Then any mutation on this entities will perform save
+    // The saving operation will same as operation when assigning variable to new value
+    // It means that in KFileDataStorage async save will be invoked, while in KLocalDataStorage blocking `put` method
+    MainStorage.list += true
 }
 ```
 
