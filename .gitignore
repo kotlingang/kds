@@ -5,6 +5,7 @@
 /core/build/
 /files/build/
 /local-storage/build/
+/shared-preferences/build/
 /json/build/
 /json/json-files/build/
 /json/json-local-storage/build/

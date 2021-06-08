@@ -28,8 +28,8 @@ fun Project.applyDeploy() {
         }
 
         project.configure<DeployEntity> {
-            group = AppInfo.PACKAGE
             artifactId = project.name
+            group = AppInfo.PACKAGE
             version = AppInfo.VERSION
             name = AppInfo.NAME
             description = AppInfo.DESCRIPTION

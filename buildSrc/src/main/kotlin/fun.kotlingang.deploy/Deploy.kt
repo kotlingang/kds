@@ -1,6 +1,5 @@
 package `fun`.kotlingang.deploy
 
-import DeployException
 import kotlin.reflect.KProperty0
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -24,7 +23,9 @@ open class DeployEntity(
     var artifactId: String? = null,
     var version: String? = null,
     var name: String? = null,
-    var description: String? = null
+    var description: String? = null,
+    var componentName: String = "kotlin",
+    var ignore: Boolean = false
 )
 
 /**
@@ -48,46 +49,50 @@ class Deploy : Plugin<Project> {
         val entity = target.extensions.create<DeployEntity>(name = "deploy entity")
 
         target.afterEvaluate {
+            // Fixes the android issue
+            afterEvaluate block@ {
+                if(entity.ignore)
+                    return@block
 
-            notNullPropertiesOrException(
-                config::host,
-                config::username,
-                config::password,
-                config::deployPath,
-                entity::name,
-                entity::group,
-                entity::description,
-                entity::artifactId
-            )
+                notNullPropertiesOrException(
+                    config::host,
+                    config::username,
+                    config::password,
+                    config::deployPath,
+                    entity::name,
+                    entity::group,
+                    entity::description,
+                    entity::artifactId
+                )
 
-            project.the<PublishingExtension>().apply {
-                publications {
-                    create<MavenPublication>("deploy") {
-                        group = entity.group ?: error("shouldn't be null")
-                        artifactId = entity.artifactId ?: error("shouldn't be null")
-                        version = entity.version ?: error("shouldn't be null")
+                project.the<PublishingExtension>().apply {
+                    publications {
+                        create<MavenPublication>("deploy") {
+                            group = entity.group ?: error("shouldn't be null")
+                            artifactId = entity.artifactId ?: error("shouldn't be null")
+                            version = entity.version ?: error("shouldn't be null")
 
-                        pom {
-                            name.set(entity.name ?: error("shouldn't be null"))
-                            description.set(entity.description ?: error("shouldn't be null"))
+                            pom {
+                                name.set(entity.name ?: error("shouldn't be null"))
+                                description.set(entity.description ?: error("shouldn't be null"))
+                            }
+                            from(components[entity.componentName])
                         }
-
-                        from(components["kotlin"])
                     }
-                }
 
-                repositories {
-                    maven {
-                        name = entity.name ?: error("shouldn't be null")
-                        version = entity.version ?: error("shouldn't be null")
+                    repositories {
+                        maven {
+                            name = entity.name ?: error("shouldn't be null")
+                            version = entity.version ?: error("shouldn't be null")
 
-                        url = uri(
-                            "sftp://${config.host}:${config.port}/${config.deployPath}"
-                        )
+                            url = uri(
+                                "sftp://${config.host}:${config.port}/${config.deployPath}"
+                            )
 
-                        credentials {
-                            username = config.username
-                            password = config.password
+                            credentials {
+                                username = config.username
+                                password = config.password
+                            }
                         }
                     }
                 }

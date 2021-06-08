@@ -1,10 +1,14 @@
 rootProject.name = "kds"
 
-include("core")
+include (
+    "core",
 
-include("files")
-include("local-storage")
+    "files",
+    "local-storage",
+    "shared-preferences",
 
-include("json")
-include("json:json-local-storage")
-include("json:json-files")
+    "json",
+    "json:json-files",
+    "json:json-local-storage",
+    "json:json-shared-preferences"
+)
