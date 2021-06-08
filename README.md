@@ -1,5 +1,5 @@
 [![Last Version](https://badge.kotlingang.fun/maven/fun/kotlingang/kds/core/)](https://maven.kotlingang.fun/fun/kotlingang/kds/)
-[![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/kotlingang/kds) <br>
+[![Hits-of-Code](https://hitsofcode.com/github/kotlingang/kds)](https://hitsofcode.com/view/github/kotlingang/kds) <br>
 
 ![badge][badge-nodejs]
 ![badge][badge-js]
