@@ -129,7 +129,7 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 **Dependency**: `fun.kotlingang.kds:json-shared-preferences:$version`
 
 ### Custom
-There **are** plans for other implementations (bundle, shared-preferences, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
+There **are** plans for other implementations (bundle, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
 
 #### Core
 > The core module with delegates and main interfaces
