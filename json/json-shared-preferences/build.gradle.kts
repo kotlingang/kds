@@ -15,6 +15,10 @@ android {
         targetSdk = Version.COMPILE_SDK
         minSdk = Version.MIN_SDK
     }
+
+    buildFeatures {
+        buildConfig = false
+    }
 }
 
 configure<DeployEntity> {
