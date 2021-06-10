@@ -8,7 +8,7 @@ public object KDS {
     private var contextSource: Application? = null
     @InternalKDSApi
     public val context: Application get() = contextSource
-        ?: error("Please ensure you called KDS.start() in App.onStart()")
+        ?: error("Please ensure you called KDS.onCreate(this) in App.onCreate()")
 
     public fun onCreate(app: Application) {
         contextSource = app
