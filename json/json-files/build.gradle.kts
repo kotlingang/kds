@@ -17,9 +17,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(json)
+                api(coroutines)
+                api(serialization)
                 implementation(files)
-                implementation(serialization)
-                implementation(coroutines)
             }
         }
         val jvmTest by getting {
