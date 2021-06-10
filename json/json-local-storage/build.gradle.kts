@@ -18,7 +18,5 @@ kotlin {
 
 dependencies {
     api(json)
-    api(core)
-    api(serialization)
     implementation(`local-storage`)
 }

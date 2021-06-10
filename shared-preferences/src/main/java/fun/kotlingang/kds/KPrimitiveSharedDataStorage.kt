@@ -1,11 +1,10 @@
 package `fun`.kotlingang.kds
 
+import `fun`.kotlingang.kds.annotation.InternalKDSApi
 import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.storage.PrimitiveDataStorage
-import `fun`.kotlingang.kds.storage.StringDataStorage
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 
 
 public open class KPrimitiveSharedDataStorage (
@@ -13,6 +12,7 @@ public open class KPrimitiveSharedDataStorage (
     prefsMode: Int = Context.MODE_PRIVATE
 ) : PrimitiveDataStorage {
 
+    @OptIn(InternalKDSApi::class)
     private val preferences by lazy {
         KDS.context.getSharedPreferences(prefsName, prefsMode)
     }

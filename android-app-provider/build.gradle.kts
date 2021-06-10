@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    // Workaround since explicitApi() does not work for android
     kotlinOptions.freeCompilerArgs += "-Xexplicit-api=strict"
     kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
 
@@ -22,7 +23,5 @@ configure<DeployEntity> {
 }
 
 dependencies {
-    api(json)
-    api(`android-app-provider`)
-    implementation(`shared-preferences`)
+    implementation(core)
 }
