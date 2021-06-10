@@ -1,10 +1,16 @@
 rootProject.name = "kds"
 
-include("core")
+include (
+    "core",
 
-include("files")
-include("local-storage")
+    "android-app-provider",
 
-include("json")
-include("json:json-local-storage")
-include("json:json-files")
+    "files",
+    "local-storage",
+    "shared-preferences",
+
+    "json",
+    "json:json-files",
+    "json:json-local-storage",
+    "json:json-shared-preferences"
+)

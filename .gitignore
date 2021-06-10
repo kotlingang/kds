@@ -5,9 +5,11 @@
 /core/build/
 /files/build/
 /local-storage/build/
+/shared-preferences/build/
 /json/build/
 /json/json-files/build/
 /json/json-local-storage/build/
+/json/json-shared-preferences/build
 
 /.gradle/
 /buildSrc/.gradle/
@@ -17,3 +19,4 @@
 
 /local.properties
 /deploy.properties
+/android-app-provider/build/

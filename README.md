@@ -1,5 +1,10 @@
 [![Last Version](https://badge.kotlingang.fun/maven/fun/kotlingang/kds/core/)](https://maven.kotlingang.fun/fun/kotlingang/kds/)
-[![Hits-of-Code](https://hitsofcode.com/github/y9san9/kds)](https://hitsofcode.com/view/github/kotlingang/kds)
+[![Hits-of-Code](https://hitsofcode.com/github/kotlingang/kds)](https://hitsofcode.com/view/github/kotlingang/kds) <br>
+
+![badge][badge-nodejs]
+![badge][badge-js]
+![badge][badge-jvm]
+![badge][badge-android]
 
 # kds
 
@@ -101,24 +106,30 @@ Note that the library is written in a way where you may **fully** customize it (
 ## Implementation
 > When targeting JS, only IR is supported
 
-`$version` - library version, can be found in badge above <br>
+`$version` - the library version, can be found in badge above <br>
 
 All `kds` packages are located at repository [maven.kotlingang.fun](https://maven.kotlingang.fun/fun/kotlingang/kds), so make sure you include one.
 
 ### KFileDataStorage
 > KDataStorage async/sync [implementation](json/json-files) with files.
 
-**Platforms**: Jvm / NodeJS <br>
+**Platforms**: ![jvm][badge-jvm] ![nodejs][badge-nodejs] <br>
 **Dependency**: `fun.kotlingang.kds:json-files:$version`
 
 ### KLocalDataStorage
 > KDataStorage sync [implementation](json/json-local-storage) with browser `localStorage`
 
-**Platforms**: Browser JS <br>
-**Dependency**: `fun.kotlingang.kds:local-storage:$version`
+**Platforms**: ![js][badge-js] <br>
+**Dependency**: `fun.kotlingang.kds:json-local-storage:$version`
+
+### KSharedDataStorage
+> KDataStorage async [implementation](json/json-shared-preferences) with android `SharedPreferences`
+
+**Platforms**: ![android][badge-android] <br>
+**Dependency**: `fun.kotlingang.kds:json-shared-preferences:$version`
 
 ### Custom
-There **are** plans for other implementations (bundle, shared-preferences, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
+There **are** plans for other implementations (bundle, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
 
 #### Core
 > The core module with delegates and main interfaces
@@ -167,3 +178,15 @@ fun main() = startApplication(::App)
 
 **Near future**: <br>
 I would separate the `json` module (add `refs-proxy` module to proxy references) and `files` (add `content-storage` module to add abstraction over storages that converting data to Map<String, String> and then serializing it to content)
+
+[badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
+[badge-ios]: http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat
+[badge-js]: http://img.shields.io/badge/platform-js-F8DB5D.svg?style=flat
+[badge-nodejs]: http://img.shields.io/badge/platform-nodejs-68a063.svg?style=flat
+[badge-jvm]: http://img.shields.io/badge/platform-jvm-DB413D.svg?style=flat
+[badge-linux]: http://img.shields.io/badge/platform-linux-2D3F6C.svg?style=flat
+[badge-windows]: http://img.shields.io/badge/platform-windows-4D76CD.svg?style=flat
+[badge-mac]: http://img.shields.io/badge/platform-macos-111111.svg?style=flat
+[badge-watchos]: http://img.shields.io/badge/platform-watchos-C0C0C0.svg?style=flat
+[badge-tvos]: http://img.shields.io/badge/platform-tvos-808080.svg?style=flat
+[badge-wasm]: https://img.shields.io/badge/platform-wasm-624FE8.svg?style=flat

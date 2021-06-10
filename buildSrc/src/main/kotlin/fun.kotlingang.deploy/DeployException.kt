@@ -1,3 +1,5 @@
+package `fun`.kotlingang.deploy
+
 /**
  * Throws when some error is occurred while deploying.
  * @param message - error details.
