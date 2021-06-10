@@ -32,6 +32,5 @@ configure<DeployEntity> {
 
 dependencies {
     api(json)
-    api(serialization)
     implementation(`shared-preferences`)
 }

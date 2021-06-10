@@ -18,7 +18,6 @@ kotlin {
             dependencies {
                 api(json)
                 api(coroutines)
-                api(serialization)
                 implementation(files)
             }
         }

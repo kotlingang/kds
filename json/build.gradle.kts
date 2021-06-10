@@ -17,8 +17,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(core)
-                implementation(serialization)
+                api(core)
+                api(serialization)
             }
         }
         all {
