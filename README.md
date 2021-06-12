@@ -53,12 +53,11 @@ You can also store android app state with the library
 ```kotlin
 class MainActivity : Activity() {
     private val state = object : KBundleDataStorage() {
-        val buttonClicked by int { 0 }
+        var score by int { 0 }  // This will be automatically saved and restored
     }
     
     override fun onCreate(bundle: Bundle?) = state.fillState(bundle) {
         super.onCreate(bundle)
-        ...
     }
     // OR
     override fun onCreate(bundle: Bundle?) {
@@ -72,6 +71,7 @@ class MainActivity : Activity() {
     }
 }
 ```
+`property` are also allowed there with serialization to string followed by `bundle.putString`
 
 
 ### Mutate Example
@@ -86,15 +86,15 @@ object MainStorage : ... {
 }
 
 // Launches an asynchronous commit after block()
-fun addItem() = MainStorage.mutate {
+fun editItem() = MainStorage.mutate {
     item.foo = ...
 }
 // Suspends until commit
-suspend fun addItem() = MainStorage.mutateCommit {
+suspend fun editItem() = MainStorage.mutateCommit {
     item.foo = ...
 }
 // Blocking mutation
-fun addItem() = MainStorage.mutateBlocking {
+fun editItem() = MainStorage.mutateBlocking {
     item.foo = ...
 }
 
