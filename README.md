@@ -71,7 +71,7 @@ class MainActivity : Activity() {
     }
 }
 ```
-`property` are also allowed there with serialization to string followed by `bundle.putString`
+> Custom `property` are also allowed there made with serialization to string followed by `bundle.putString`
 
 
 ### Mutate Example
