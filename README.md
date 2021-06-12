@@ -153,7 +153,14 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 
 **Platforms**: ![android][badge-android] <br>
 **Dependency**: `fun.kotlingang.kds:json-shared-preferences:$version` <br>
-**Example**: Github [repo](https://github.com/kotlingang/kds-android-example)
+**Example**: GitHub [repo](https://github.com/kotlingang/kds-android-example)
+
+### KBundleDataStorage
+> KDataStorage sync [implementation](json/json-bundle) with android `Bundle`
+
+**Platforms**: ![android][badge-android] <br>
+**Dependency**: `fun.kotlingang.kds:json-bundle:$version` <br>
+**Example**: GitHub [repo](https://github.com/kotlingang/kds-android-example)
 
 ### Custom
 There **are** plans for other implementations (bundle, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
