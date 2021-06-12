@@ -13,9 +13,6 @@ Kotlin Data Storage is a multiplatform coroutine-based kotlin library for storin
 ## Use case
 If you need to store any kind of preferences in your app, you would probably use this framework since it has a common API for any platform you need.
 
-## ⚠️ Current State
-We are experimental, which means API breaking changes may be performed in minor releases.
-
 ## Example
 
 ### Files Storage
@@ -124,8 +121,6 @@ fun main() {
     MainStorage.list += true
 }
 ```
-
-There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
 
 Note that the library is written in a way where you may **fully** customize it (add xml format for files/etc, implement java.Serializable support and so on, interfaces are common, so you may still use delegates, commits, mutations on it)
 
