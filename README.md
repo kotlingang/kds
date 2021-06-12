@@ -48,6 +48,32 @@ fun main() {
 }
 ```
 
+### Android Bundle State
+You can also store android app state with the library
+```kotlin
+class MainActivity : Activity() {
+    private val state = object : KBundleDataStorage() {
+        val buttonClicked by int { 0 }
+    }
+    
+    override fun onCreate(bundle: Bundle?) = state.fillState(bundle) {
+        super.onCreate(bundle)
+        ...
+    }
+    // OR
+    override fun onCreate(bundle: Bundle?) {
+        super.onCreate(bundle)
+        state.restoreInstanceState(bundle)
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        state.saveInstanceState(outState)
+    }
+}
+```
+
+
 ### Mutate Example
 There is also an API to use mutable objects
 ```kotlin

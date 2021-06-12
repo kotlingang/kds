@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 
 public open class KLocalDataStorage (
     json: Json = Json
-) : KJsonDataStorage(json, JsonElementLocalDataStorage(json)), CommittableStorage {
+) : KJsonDataStorage(json, JsonElementLocalDataStorage(json)) {
     @OptIn(DelicateKDSApi::class, RawSetterGetter::class)
     final override fun commitBlocking(): Unit = encodeReferences()
         .forEach { (k, v) -> KStringLocalDataStorage.putString(k, json.encodeToString(v)) }

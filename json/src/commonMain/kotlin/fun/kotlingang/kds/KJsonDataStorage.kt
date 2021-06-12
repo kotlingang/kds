@@ -8,6 +8,7 @@ import `fun`.kotlingang.kds.storage.JsonElementDataStorage
 import `fun`.kotlingang.kds.storage.SerializableDataStorage
 import `fun`.kotlingang.kds.sync.platformSynchronized
 import `fun`.kotlingang.kds.optional.Optional
+import `fun`.kotlingang.kds.storage.CommittableStorage
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -15,10 +16,10 @@ import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 
 
-public open class KJsonDataStorage (
+public abstract class KJsonDataStorage (
     final override val json: Json,
     private val storage: JsonElementDataStorage
-) : SerializableDataStorage {
+) : SerializableDataStorage, CommittableStorage {
 
     /**
      * Any mutation/iteration/etc should be wrapped with synchronization
