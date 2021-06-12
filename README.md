@@ -48,6 +48,32 @@ fun main() {
 }
 ```
 
+### Android Bundle State
+You can also store android app state with the library
+```kotlin
+class MainActivity : Activity() {
+    private val state = object : KBundleDataStorage() {
+        var score by int { 0 }  // This will be automatically saved and restored
+    }
+    
+    override fun onCreate(bundle: Bundle?) = state.fillState(bundle) {
+        super.onCreate(bundle)
+    }
+    // OR
+    override fun onCreate(bundle: Bundle?) {
+        super.onCreate(bundle)
+        state.restoreInstanceState(bundle)
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        state.saveInstanceState(outState)
+    }
+}
+```
+`property` are also allowed there with serialization to string followed by `bundle.putString`
+
+
 ### Mutate Example
 There is also an API to use mutable objects
 ```kotlin
@@ -60,15 +86,15 @@ object MainStorage : ... {
 }
 
 // Launches an asynchronous commit after block()
-fun addItem() = MainStorage.mutate {
+fun editItem() = MainStorage.mutate {
     item.foo = ...
 }
 // Suspends until commit
-suspend fun addItem() = MainStorage.mutateCommit {
+suspend fun editItem() = MainStorage.mutateCommit {
     item.foo = ...
 }
 // Blocking mutation
-fun addItem() = MainStorage.mutateBlocking {
+fun editItem() = MainStorage.mutateBlocking {
     item.foo = ...
 }
 
@@ -127,7 +153,14 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 
 **Platforms**: ![android][badge-android] <br>
 **Dependency**: `fun.kotlingang.kds:json-shared-preferences:$version` <br>
-**Example**: Github [repo](https://github.com/kotlingang/kds-android-example)
+**Example**: GitHub [repo](https://github.com/kotlingang/kds-android-example)
+
+### KBundleDataStorage
+> KDataStorage sync [implementation](json/json-bundle) with android `Bundle`
+
+**Platforms**: ![android][badge-android] <br>
+**Dependency**: `fun.kotlingang.kds:json-bundle:$version` <br>
+**Example**: GitHub [repo](https://github.com/kotlingang/kds-android-example)
 
 ### Custom
 There **are** plans for other implementations (bundle, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
