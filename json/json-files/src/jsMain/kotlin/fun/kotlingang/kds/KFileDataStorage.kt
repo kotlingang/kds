@@ -2,12 +2,10 @@ package `fun`.kotlingang.kds
 
 import `fun`.kotlingang.kds.file.CommonFile
 import `fun`.kotlingang.kds.storage.AsyncCommittableStorage
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.Json
-import java.io.File
 
 
-@OptIn(DelicateCoroutinesApi::class)
 public actual open class KFileDataStorage private constructor (
     json: Json,
     private val storage: JsonElementFileDataStorage
@@ -22,12 +20,6 @@ public actual open class KFileDataStorage private constructor (
         absolutePath = CommonFile.HOME_DIR.join(path = "data").join(path = "data.json").absolutePath,
         json, scope
     )
-
-    public constructor (
-        file: File,
-        json: Json = Json,
-        scope: CoroutineScope = GlobalScope + SupervisorJob()
-    ) : this(file.absolutePath, json, scope)
 
     public actual companion object {
         public actual fun ofName (
