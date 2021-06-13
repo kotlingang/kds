@@ -7,18 +7,19 @@
 ![badge][badge-android]
 
 # kds
-
-Kotlin Data Storage is a multiplatform coroutine-based kotlin library for storing Serializables with kotlinx.serialization and delegates.
+Kotlin Data Storage is a multiplatform coroutine-based kotlin library for storing Serializables with kotlinx.serialization and delegates.  
 
 ## Use case
 If you need to store any kind of preferences in your app, you would probably use this framework since it has a common API for any platform you need.
 
-## ⚠️ Current State
-We are experimental, which means API breaking changes may be performed in minor releases.
-
-## Example
+## Examples
 
 ### Files Storage
+
+<details>
+<summary>Expand</summary>
+<p>
+
 ```kotlin
 import ProgramData.userName
 
@@ -37,7 +38,15 @@ fun main() {
 }
 ```
 
+</p>
+</details>
+
 ### Web Storage
+
+<details>
+<summary>Expand</summary>
+<p>
+    
 ```kotlin
 object CookiesStorage : KLocalDataStorage() {
     val uniqueADId by property { Random.nextLong() }
@@ -47,8 +56,50 @@ fun main() {
     console.log("🙈 I'm tracking you, ${CookiesStorage.uniqueADId}!")
 }
 ```
+    
+</p>
+</details>
 
+### SharedPreferences
+
+<details>
+<summary>Expand</summary>
+<p>
+
+```kotlin
+// Initialize context first:
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        KDS.onCreate(app = this)
+    }
+}
+...
+object SharedStorage : KSharedDataStorage() {
+    var clicks by int { 0 }
+}
+...
+import SharedStorage.clicks
+
+class MainActivity : Activity() {
+    override fun onCreate(bundle: Bundle?) {
+        ...
+        main.setOnClickListener {
+            updateClicks(++clicks)
+        }
+    }
+}
+```
+
+</p>
+</details>
+        
 ### Android Bundle State
+
+<details>
+<summary>Expand</summary>
+<p>
+
 You can also store android app state with the library
 ```kotlin
 class MainActivity : Activity() {
@@ -71,10 +122,17 @@ class MainActivity : Activity() {
     }
 }
 ```
-`property` are also allowed there with serialization to string followed by `bundle.putString`
+> Custom `property` are also allowed there made with serialization to string followed by `bundle.putString`
 
+</p>
+</details>
 
 ### Mutate Example
+
+<details>
+<summary>Expand</summary>
+<p>
+
 There is also an API to use mutable objects
 ```kotlin
 data class Item (
@@ -108,7 +166,15 @@ suspend fun main() {
 }
 ```
 
+</p>
+</details>
+
 ### Mutate Entities
+
+<details>
+<summary>Expand</summary>
+<p>
+
 There are some (experimental for now) entities which may automatically perform save operation on mutate:
 ```kotlin
 object MainStorage : ... {
@@ -125,7 +191,8 @@ fun main() {
 }
 ```
 
-There are both blocking and asynchronous implementations (except JS-browser where there is only blocking implementation due to using `localStorage` instead of files).
+</p>
+</details>
 
 Note that the library is written in a way where you may **fully** customize it (add xml format for files/etc, implement java.Serializable support and so on, interfaces are common, so you may still use delegates, commits, mutations on it)
 
@@ -182,7 +249,11 @@ There are a lot of possibilities to customize the library, the main goal, for no
 
 **Ideas**: <br>
 I think it may be cool to integrate the library with [kvision](https://github.com/rjaros/kvision), `compose`, etc.
+
 ### KVision integration example
+<details>
+<summary>Expand</summary>
+<p>
 
 ```kotlin
 object AppData : KLocalDataStorage() {
@@ -209,6 +280,9 @@ class App : Application() {
 
 fun main() = startApplication(::App)
 ```
+
+</p>
+</details>
 
 **Near future**: <br>
 I would separate the `json` module (add `refs-proxy` module to proxy references) and `files` (add `content-storage` module to add abstraction over storages that converting data to Map<String, String> and then serializing it to content)
