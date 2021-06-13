@@ -9,8 +9,6 @@
 # kds
 Kotlin Data Storage is a multiplatform coroutine-based kotlin library for storing Serializables with kotlinx.serialization and delegates.  
 
-**Implementations:** files, localStorage, SharedPreferences, Bundle
-
 ## Use case
 If you need to store any kind of preferences in your app, you would probably use this framework since it has a common API for any platform you need.
 
