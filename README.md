@@ -17,8 +17,8 @@ If you need to store any kind of preferences in your app, you would probably use
 ### Files Storage
 
 <details>
-    <summary>Expand</summary>
-    <p>
+<summary>Expand</summary>
+<p>
 
 ```kotlin
 import ProgramData.userName
@@ -38,7 +38,7 @@ fun main() {
 }
 ```
 
-    </p>
+</p>
 </details>
 
 ### Web Storage
