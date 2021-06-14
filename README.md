@@ -313,7 +313,7 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 ### Coroutines Extensions
 > MutableStateFlow [implementation](extensions/extensions-coroutines/src/commonMain/kotlin/fun/kotlingang/kds/coroutines/mutable_state_flow/StorageMutableStateFlow.kt)
 
-**Platform**: Any
+**Platform**: Any  
 **Dependency**: `fun.kotlingang.kds:extensions-coroutines:$version`
 
 ### KVision Extensions
