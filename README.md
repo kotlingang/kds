@@ -208,7 +208,7 @@ Library integrates with some other libraries providing convenient API for storin
 
 ```kotlin
 object ComposeStorage : ... {
-    val username = mutableState<String>()
+    val username by mutableState<String>()
 }
 ...
 @Composable
@@ -228,7 +228,7 @@ fun UserNameText() {
 
 ```kotlin
 object AppData : KLocalDataStorage() {
-    val clicks = observableValue { 0 }
+    val clicks by observableValue { 0 }
 }
 
 class App : Application() {
@@ -309,6 +309,18 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 
 **Platforms**: ![android][badge-android] <br>
 **Dependency**: `fun.kotlingang.kds:extensions-androidx:$version`
+
+### Coroutines Extensions
+> MutableStateFlow [implementation](extensions/extensions-coroutines/src/commonMain/kotlin/fun/kotlingang/kds/coroutines/mutable_state_flow/StorageMutableStateFlow.kt)
+
+**Platform**: ![android][badge-android] ![jvm][badge-jvm] ![js][badge-js] ![nodejs][badge-nodejs]  
+**Dependency**: `fun.kotlingang.kds:extensions-coroutines:$version`
+
+### KVision Extensions
+> ObservableState [implementation](extensions/extensions-kvision/src/main/kotlin/fun/kotlingang/kds/kvision/observable_value/StorageObservableValue.kt)
+
+**Platform**: ![js][badge-js]  
+**Dependency**: `fun.kotlingang.kds:extensions-kvision:$version`
 
 ## Custom
 If you want to create your own implementation, take a look at the following dependencies

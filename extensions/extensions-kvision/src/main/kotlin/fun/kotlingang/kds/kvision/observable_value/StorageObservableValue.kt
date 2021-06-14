@@ -25,8 +25,13 @@ public class StorageObservableValueProvider<T> @UnsafeKType constructor (
     private val type: KType,
     private val default: () -> T
 ) {
-    public operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): StorageObservableValue<T> =
-        StorageObservableValue(storage, property.name, type, default)
+    private lateinit var name: String
+    private val state by lazy { StorageObservableValue(storage, name, type, default) }
+
+    public operator fun getValue(thisRef: Any?, property: KProperty<*>): StorageObservableValue<T> {
+        name = property.name
+        return state
+    }
 }
 
 @OptIn(UnsafeKType::class, RawSetterGetter::class)

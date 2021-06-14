@@ -17,6 +17,7 @@ public inline fun <reified T> KTypeDataStorage.mutableState (
     policy: SnapshotMutationPolicy<T?> = structuralEqualityPolicy(),
 ): StorageMutableStateProvider<T?> = mutableState(policy) { null }
 
+
 @OptIn(ExperimentalStdlibApi::class, UnsafeKType::class)
 public inline fun <reified T> KTypeDataStorage.mutableState (
     policy: SnapshotMutationPolicy<T> = structuralEqualityPolicy(),
@@ -29,15 +30,21 @@ public inline fun <reified T> KTypeDataStorage.mutableState (
 )
 
 
+@OptIn(UnsafeKType::class)
 public class StorageMutableStateProvider<T> @UnsafeKType constructor (
     private val storage: KTypeDataStorage,
     private val type: KType,
     private val defaultValue: () -> T,
     private val policy: SnapshotMutationPolicy<T>
 ) {
-    @OptIn(UnsafeKType::class)
-    public operator fun provideDelegate(thisRef: Any?, property: KProperty<*>): StorageMutableState<T> =
-        StorageMutableState(storage, property.name, type, defaultValue, policy)
+    private lateinit var name: String
+    private val state by lazy { StorageMutableState(storage, name, type, defaultValue, policy) }
+
+    public operator fun getValue(thisRef: Any?, property: KProperty<*>): StorageMutableState<T> {
+        name = property.name
+        return state
+    }
+
 }
 
 @OptIn(RawSetterGetter::class, UnsafeKType::class)
