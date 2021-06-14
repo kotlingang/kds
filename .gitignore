@@ -1,24 +1,9 @@
-/.idea/
-
-/build/
-/buildSrc/build/
-/core/build/
-/files/build/
-/local-storage/build/
-/shared-preferences/build/
-/bundle/build/
-/json/build/
-/json/json-files/build/
-/json/json-local-storage/build/
-/json/json-shared-preferences/build/
-/json/json-bundle/
-
-/.gradle/
-/buildSrc/.gradle/
+.idea
+build
+.gradle
 
 /data/
 /json/json-files/data/
 
 /local.properties
 /deploy.properties
-/android-app-provider/build/
