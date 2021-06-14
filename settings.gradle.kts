@@ -16,5 +16,8 @@ include (
     "json:json-shared-preferences",
     "json:json-bundle",
 
-    "extensions:extensions-androidx"
+    "extensions",
+    "extensions:extensions-androidx",
+    "extensions:extensions-kvision",
+    "extensions:extensions-coroutines"
 )

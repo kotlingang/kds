@@ -222,6 +222,48 @@ fun UserNameText() {
 
 </details>
 
+### KVision ObservableValue
+<details>
+<summary>Expand</summary>
+
+```kotlin
+object AppData : KLocalDataStorage() {
+    val clicks = observableValue { 0 }
+}
+
+class App : Application() {
+    override fun start() {
+        root(id = "root") {
+            vPanel {
+                h1(AppData.clicks) { clicks ->
+                    + "Clicked $clicks times"
+                }
+                button(text = "Click!") {
+                    onClick {
+                        // Changes still handled by storage
+                        clicks.value++
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun main() = startApplication(::App)
+```
+
+</details>
+
+### Coroutines MutableStateFlow
+<details>
+<summary>Expand</summary>
+
+```kotlin
+
+```
+
+</details>
+
 </details>
 
 ## Implementation
@@ -257,8 +299,16 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 **Dependency**: `fun.kotlingang.kds:json-bundle:$version` <br>
 **Example**: GitHub [repo](https://github.com/kotlingang/kds-android-example)
 
-### Custom
-There **are** plans for other implementations (bundle, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
+## Integrations implementation
+
+### Androidx Extensions
+> MutableState [implementation](extensions/extensions-androidx/src/main/java/fun/kotlingang/kds/compose/mutable_state/StorageMutableState.kt)
+
+**Platforms**: ![android][badge-android] <br>
+**Dependency**: `fun.kotlingang.kds:extensions-androidx:$version`
+
+## Custom
+If you want to create your own implementation, take a look at the following dependencies
 
 #### Core
 > The core module with delegates and main interfaces

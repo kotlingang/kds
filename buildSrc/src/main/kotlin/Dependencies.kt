@@ -5,3 +5,5 @@ const val nodejsExternals = "org.jetbrains.kotlinx:kotlinx-nodejs:${Version.NODE
 
 // Used for integrations
 const val composeRuntime = "androidx.compose.runtime:runtime:${Version.COMPOSE}"
+const val kvision = "io.kvision:kvision:${Version.KVISION}"
+

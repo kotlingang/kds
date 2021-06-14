@@ -2,7 +2,7 @@ package `fun`.kotlingang.kds.compose.mutable_state
 
 import `fun`.kotlingang.kds.annotation.RawSetterGetter
 import `fun`.kotlingang.kds.annotation.UnsafeKType
-import `fun`.kotlingang.kds.optional.fillDefault
+import `fun`.kotlingang.kds.optional.getOrDefault
 import `fun`.kotlingang.kds.storage.KTypeDataStorage
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SnapshotMutationPolicy
@@ -49,7 +49,7 @@ public class StorageMutableState<T> @UnsafeKType constructor (
     policy: SnapshotMutationPolicy<T>
 ) : MutableState<T> {
     private val state = mutableStateOf (
-        storage.getWithKType<T>(key, type).fillDefault(defaultValue).value,
+        storage.getWithKType<T>(key, type).getOrDefault(defaultValue),
         policy = policy
     )
 
