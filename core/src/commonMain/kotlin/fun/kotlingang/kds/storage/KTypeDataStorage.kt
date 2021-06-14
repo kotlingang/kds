@@ -16,7 +16,7 @@ public interface KTypeDataStorage {
     public fun putWithKType(key: String, type: KType, value: Any?)
 
     /**
-     * May be you would use inline [getWithKType]?
+     * Maybe you would use inline [getWithKType]?
      */
     @RawSetterGetter
     @UnsafeKType

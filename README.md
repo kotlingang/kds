@@ -196,6 +196,79 @@ fun main() {
 
 Note that the library is written in a way where you may **fully** customize it (add xml format for files/etc, implement java.Serializable support and so on, interfaces are common, so you may still use delegates, commits, mutations on it)
 
+## Integrations
+Library integrates with some other libraries providing convenient API for storing androidx `MutableState`. Integrations still require including storage dependency.
+
+<details>
+<summary>Expand</summary>
+
+### Androidx MutableState
+<details>
+<summary>Expand</summary>
+
+```kotlin
+object ComposeStorage : ... {
+    val username by mutableState<String>()
+}
+...
+@Composable
+fun UserNameText() {
+    val username by remember { ComposeStorage.username }
+    Text (
+        text = username
+    )
+}
+```
+
+</details>
+
+### KVision ObservableValue
+<details>
+<summary>Expand</summary>
+
+```kotlin
+object AppData : KLocalDataStorage() {
+    val clicks by observableValue { 0 }
+}
+
+class App : Application() {
+    override fun start() {
+        root(id = "root") {
+            vPanel {
+                h1(AppData.clicks) { clicks ->
+                    + "Clicked $clicks times"
+                }
+                button(text = "Click!") {
+                    onClick {
+                        // Changes still handled by storage
+                        clicks.value++
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun main() = startApplication(::App)
+```
+
+</details>
+
+### Coroutines MutableStateFlow
+<details>
+<summary>Expand</summary>
+
+```kotlin
+object CoroutinesStorage : ... {
+    // Use it everywhere you need to save state flow values
+    val stateFlow by mutableStateFlow<String>()
+}
+```
+
+</details>
+
+</details>
+
 ## Implementation
 > When targeting JS, only IR is supported
 
@@ -229,8 +302,28 @@ All `kds` packages are located at repository [maven.kotlingang.fun](https://mave
 **Dependency**: `fun.kotlingang.kds:json-bundle:$version` <br>
 **Example**: GitHub [repo](https://github.com/kotlingang/kds-android-example)
 
-### Custom
-There **are** plans for other implementations (bundle, ns-user-default, etc.), but if you want to create your implementation, take a look at the following dependencies
+## Integrations implementation
+
+### Androidx Extensions
+> MutableState [implementation](extensions/extensions-androidx/src/main/java/fun/kotlingang/kds/compose/mutable_state/StorageMutableState.kt)
+
+**Platforms**: ![android][badge-android] <br>
+**Dependency**: `fun.kotlingang.kds:extensions-androidx:$version`
+
+### Coroutines Extensions
+> MutableStateFlow [implementation](extensions/extensions-coroutines/src/commonMain/kotlin/fun/kotlingang/kds/coroutines/mutable_state_flow/StorageMutableStateFlow.kt)
+
+**Platform**: ![android][badge-android] ![jvm][badge-jvm] ![js][badge-js] ![nodejs][badge-nodejs]  
+**Dependency**: `fun.kotlingang.kds:extensions-coroutines:$version`
+
+### KVision Extensions
+> ObservableState [implementation](extensions/extensions-kvision/src/main/kotlin/fun/kotlingang/kds/kvision/observable_value/StorageObservableValue.kt)
+
+**Platform**: ![js][badge-js]  
+**Dependency**: `fun.kotlingang.kds:extensions-kvision:$version`
+
+## Custom
+If you want to create your own implementation, take a look at the following dependencies
 
 #### Core
 > The core module with delegates and main interfaces
@@ -243,49 +336,6 @@ There **are** plans for other implementations (bundle, ns-user-default, etc.), b
 
 **Platforms**: Any<br>
 **Dependency**: `fun.kotlingang.kds:json:$version`
-
-## Plans
-There are a lot of possibilities to customize the library, the main goal, for now, is a stabilization of user API.
-
-**Ideas**: <br>
-I think it may be cool to integrate the library with [kvision](https://github.com/rjaros/kvision), `compose`, etc.
-
-### KVision integration example
-<details>
-<summary>Expand</summary>
-<p>
-
-```kotlin
-object AppData : KLocalDataStorage() {
-    val clicks by kvisionState<Int>()
-}
-
-class App : Application() {
-    override fun start() {
-        root(id = "root") {
-            vPanel {
-                h1(AppData.clicks) { clicks ->
-                    + "Clicked $clicks times"
-                }
-                button(text = "Click!") {
-                    onClick {
-                        // Changes still handled by storage
-                        clicks.value++ 
-                    }
-                }
-            }
-        }
-    }
-}
-
-fun main() = startApplication(::App)
-```
-
-</p>
-</details>
-
-**Near future**: <br>
-I would separate the `json` module (add `refs-proxy` module to proxy references) and `files` (add `content-storage` module to add abstraction over storages that converting data to Map<String, String> and then serializing it to content)
 
 [badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
 [badge-ios]: http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat

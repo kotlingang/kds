@@ -76,7 +76,11 @@ class Deploy : Plugin<Project> {
                                 name.set(entity.name ?: error("shouldn't be null"))
                                 description.set(entity.description ?: error("shouldn't be null"))
                             }
-                            from(components[entity.componentName])
+
+                            if(components.asMap.containsKey(entity.componentName))
+                                from(components[entity.componentName])
+                            else
+                                System.err.println("Trying to create component from ${entity.componentName}, but this component not found in project ${project.name}")
                         }
                     }
 
