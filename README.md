@@ -259,7 +259,10 @@ fun main() = startApplication(::App)
 <summary>Expand</summary>
 
 ```kotlin
-
+object CoroutinesStorage : ... {
+    // Use it everywhere you need to save state flow values
+    val stateFlow by mutableStateFlow<String>()
+}
 ```
 
 </details>
