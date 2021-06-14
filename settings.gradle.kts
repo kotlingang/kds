@@ -14,5 +14,7 @@ include (
     "json:json-files",
     "json:json-local-storage",
     "json:json-shared-preferences",
-    "json:json-bundle"
+    "json:json-bundle",
+
+    "extensions:extensions-androidx"
 )

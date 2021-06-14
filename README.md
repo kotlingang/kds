@@ -196,6 +196,34 @@ fun main() {
 
 Note that the library is written in a way where you may **fully** customize it (add xml format for files/etc, implement java.Serializable support and so on, interfaces are common, so you may still use delegates, commits, mutations on it)
 
+## Integrations
+Library integrates with some other libraries providing convenient API for storing androidx `MutableState`. Integrations still require including storage dependency.
+
+<details>
+<summary>Expand</summary>
+
+### Androidx MutableState
+<details>
+<summary>Expand</summary>
+
+```kotlin
+object ComposeStorage : ... {
+    val username = mutableState<String>()
+}
+...
+@Composable
+fun UserNameText() {
+    val username by remember { ComposeStorage.username }
+    Text (
+        text = username
+    )
+}
+```
+
+</details>
+
+</details>
+
 ## Implementation
 > When targeting JS, only IR is supported
 
@@ -243,49 +271,6 @@ There **are** plans for other implementations (bundle, ns-user-default, etc.), b
 
 **Platforms**: Any<br>
 **Dependency**: `fun.kotlingang.kds:json:$version`
-
-## Plans
-There are a lot of possibilities to customize the library, the main goal, for now, is a stabilization of user API.
-
-**Ideas**: <br>
-I think it may be cool to integrate the library with [kvision](https://github.com/rjaros/kvision), `compose`, etc.
-
-### KVision integration example
-<details>
-<summary>Expand</summary>
-<p>
-
-```kotlin
-object AppData : KLocalDataStorage() {
-    val clicks by kvisionState<Int>()
-}
-
-class App : Application() {
-    override fun start() {
-        root(id = "root") {
-            vPanel {
-                h1(AppData.clicks) { clicks ->
-                    + "Clicked $clicks times"
-                }
-                button(text = "Click!") {
-                    onClick {
-                        // Changes still handled by storage
-                        clicks.value++ 
-                    }
-                }
-            }
-        }
-    }
-}
-
-fun main() = startApplication(::App)
-```
-
-</p>
-</details>
-
-**Near future**: <br>
-I would separate the `json` module (add `refs-proxy` module to proxy references) and `files` (add `content-storage` module to add abstraction over storages that converting data to Map<String, String> and then serializing it to content)
 
 [badge-android]: http://img.shields.io/badge/platform-android-6EDB8D.svg?style=flat
 [badge-ios]: http://img.shields.io/badge/platform-ios-CDCDCD.svg?style=flat
