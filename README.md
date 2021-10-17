@@ -348,3 +348,4 @@ If you want to create your own implementation, take a look at the following depe
 [badge-watchos]: http://img.shields.io/badge/platform-watchos-C0C0C0.svg?style=flat
 [badge-tvos]: http://img.shields.io/badge/platform-tvos-808080.svg?style=flat
 [badge-wasm]: https://img.shields.io/badge/platform-wasm-624FE8.svg?style=flat
+
